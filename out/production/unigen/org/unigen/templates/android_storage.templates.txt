@@ -1,0 +1,237 @@
+interface_location ~Interface/Uni~
+implementation_location ~Implementation/Uni~
+
+file_header
+~
+//
+//    THIS FILE WAS GENERATED WITH "UNIGEN"
+//    DO NOT EDIT CODE MANUALLY
+//
+//    Source: {source}
+//    Time: {time}
+//
+
+
+
+~
+
+
+file_name ~{name}.swift~
+
+types_class_header ~
+public class {name} {
+~
+
+record_class_header ~
+	public class {name} {
+
+		public func clear() {
+			_assignedFields = 0
+		}
+
+~
+
+record_field_accessor ~
+		var {name}: {type}? {
+			get { return (_assignedFields & {flag} != 0) ? _{name} : nil }
+			set { _{name} = newValue; _assignedFields |= {flag} }
+		}
+~
+
+record_copy_header ~
+
+		public func copy() -> {type} {
+			var record = {type}()
+			record._assignedFields = _assignedFields
+~
+
+record_copy_assignment ~
+			record._{name} = _{name}
+~
+
+record_copy_footer ~
+			return record
+		}
+
+~
+
+
+record_field_var ~
+		var _{name}: {type}?
+~
+
+record_assigned_fields_var ~
+		private var _assignedFields = 0
+~
+
+record_field_flag ~~
+
+record_class_footer ~
+	}
+~
+
+types_class_footer ~
+}
+~
+
+
+
+
+
+storage_interface_header ~
+public protocol {name}: Component {
+~
+
+storage_interface_record_methods ~
+	func updateOrInsert(records: [{type}], inout updated: [{type}]?, inout inserted: [{type}]?)
+	func update(records: [{type}], inout updated: [{type}]?)
+	func insert(records: [{type}]) throws
+~
+
+storage_interface_query_iterator ~
+	func {name}({params}inDatabase database: StorageDatabase) -> DatabaseRecordReader<{type}>
+~
+
+storage_interface_query_array ~
+	func {name}({params}inDatabase database: StorageDatabase) -> [{type}]
+~
+
+storage_interface_query_record ~
+	func {name}({params}inDatabase database: StorageDatabase) -> {type}?
+~
+
+storage_interface_footer ~
+}
+~
+
+
+
+
+
+storage_class_header ~
+public class {class}: {interface}, Component {
+
+
+	// MARK: - Component
+
+
+	public func resolveDependency(dependency: DependencyResolver) {
+		let applicationStorage = try! dependency.required() as ApplicationStorage
+		storage = applicationStorage.getModuleStorage("Notifications")
+		try! storage.initializeDatabase(DefaultDatabaseMaintenance())
+	}
+
+
+	// MARK: - NotificationsStorage
+~
+
+
+
+
+
+storage_query_iterator_header ~
+	public func {name}({params}inDatabase database: StorageDatabase) -> DatabaseRecordReader<{type}> {
+~
+
+storage_query_array_header ~
+	public func {name}({params}inDatabase database: StorageDatabase) -> [{type}] {
+~
+
+storage_query_record_header ~
+	public func {name}({params}inDatabase database: StorageDatabase) -> {type}? {
+~
+
+storage_query_header ~
+		let iterator = try! database.iterateRecords({sql},
+			record: {type}(),
+			setParams: {
+				select in
+~
+
+storage_query_param_assignment ~
+				select.{set}({index}, {param})
+~
+
+storage_query_after_params ~
+			},
+			readRecord: {
+				reader, record in
+~
+
+storage_query_result_field_assignment ~
+				record.{field} = reader.{get}({index})
+~
+
+storage_query_footer ~
+			})
+~
+
+storage_query_iterator_footer ~
+		return iterator
+	}
+
+
+
+~
+
+storage_query_array_footer ~
+		var records = [{type}]()
+		for record in iterator {
+			records.append(record.copy())
+		}
+		return records
+	}
+~
+
+storage_query_record_footer ~
+		return iterator.next()
+	}
+~
+
+
+
+
+
+storage_record_updates ~
+
+	public func updateOrInsert(records: [{type}], inout updated: [{type}]?, inout inserted: [{type}]?) {
+	}
+
+
+	public func update(records: [{type}], inout updated: [{type}]?) {
+	}
+
+
+	public func insert(records: [{type}]) throws {
+	}
+~
+
+storage_class_maintenance_header ~
+
+	// MARK: - Internals
+
+
+	private var storage: ModuleStorage!
+	public class DefaultDatabaseMaintenance: DatabaseMaintenance {
+		public let requiredVersion = {version}
+
+		public func createTables(database: StorageDatabase) throws {
+~
+
+storage_class_maintenance_table_creation ~
+			try database.executeStatement({sql})
+~
+
+storage_class_maintenance_footer ~
+		}
+
+		public func migrate(database: StorageDatabase, fromVersion: Int) throws -> Bool {
+			return try {storage}DatabaseMigration.migrate(database, fromVersion: fromVersion)
+		}
+
+	}
+~
+
+storage_class_footer ~
+}
+~

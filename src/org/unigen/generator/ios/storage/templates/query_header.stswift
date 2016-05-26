@@ -1,0 +1,36 @@
+func ~= query.name ~(~
+{
+	String separator = "";
+	for (Query_param param : query.params) {
+		~~~= separator ~~= param.name ~: ~= swift.from_field_type(param.type) ~~
+		separator = ", ";
+	}
+}
+~) -> ~
+switch (query.returns) {
+	case Iterator:
+		if (query.record_type.fields.length == 1) {
+			~DatabaseValueSequence<~=swift.from_field_type(query.record_type.fields[0].type)~>~
+		}
+		else {
+			~DatabaseRecordSequence<~=query.record_type.name~>~
+		}
+		break;
+	case Array:
+		if (query.record_type.fields.length == 1) {
+			~[~=swift.from_field_type(query.record_type.fields[0].type)~]~
+		}
+		else {
+			~[~=query.record_type.name~]~
+		}
+		break;
+	default:
+		if (query.record_type.fields.length == 1) {
+			~~~=swift.from_field_type(query.record_type.fields[0].type)~?~
+		}
+		else {
+			~~~=query.record_type.name~?~
+		}
+		break;
+}
+~

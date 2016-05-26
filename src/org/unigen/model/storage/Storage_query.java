@@ -1,0 +1,46 @@
+package org.unigen.model.storage;
+
+import org.unigen.Unigen_exception;
+
+public class Storage_query {
+	public enum Returns {
+		Iterator, Array, Record;
+
+		public static Returns parse(String string) throws Unigen_exception {
+			if (string == null || string.isEmpty()) {
+				return Iterator;
+			}
+			String lowered = string.trim().toLowerCase();
+			if (lowered.equals("array")) {
+				return Array;
+			}
+			if (lowered.equals("record")) {
+				return Record;
+			}
+			if (lowered.equals("iterator")) {
+				return Iterator;
+			}
+			throw new Unigen_exception("Query \".returns\" has invalid value: " + string);
+		}
+	}
+
+	public final Returns returns;
+	public final String name;
+	public final String generate_record_type;
+	public final Query_param[] params;
+	public final Storage_table table;
+	public final Table_field[] fields;
+	public final String where;
+	public final Record_type record_type;
+
+	public Storage_query(Returns returns, String name, String generate_record_type, Query_param[] params, Storage_table table, Table_field[] fields, String where, Record_type record_type) {
+		this.returns = returns;
+		this.name = name;
+		this.generate_record_type = generate_record_type;
+		this.params = params;
+		this.table = table;
+		this.fields = fields;
+		this.where = where;
+		this.record_type = record_type;
+	}
+}

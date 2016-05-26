@@ -1,0 +1,9 @@
+func ~= method.identifier ~(~
+boolean is_first = true;
+for (Cloud_struct_field param : method.params.struct_type().fields) {
+ 	~~~= (!is_first ? ", " : "") + param.identifier ~: ~= swift.param_type_declaration(param.declaration) ~~
+ 	is_first = false;
+}~) throws~
+if (method.result != null) {
+	~ -> ~= swift.interface_declaration(method.result)~~
+}~

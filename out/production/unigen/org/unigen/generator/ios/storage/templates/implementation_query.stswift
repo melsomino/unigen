@@ -1,0 +1,74 @@
+~
+Table_field return_field = query.record_type.fields.length == 1 ? query.record_type.fields[0] : null;
+String return_name = return_field != null ? swift.from_field_type(return_field.type) : query.record_type.name;
+
+StringBuilder sql = new StringBuilder();
+sql.append("SELECT ");
+{
+	String separator = "";
+	for (Table_field field : query.fields) {
+		sql.append(separator).append(field.name);
+		separator = ", ";
+	}
+	sql.append("\nFROM ").append(query.table.name);
+	if (query.where != null) {
+		sql.append("\nWHERE ").append(query.where);
+	}
+}
+~
+		public ~+query_header~ {
+			let sequence = try! database.iterate~=return_field == null ? "Records" : "Values"~(
+				~=swift.make_string_literal(sql.toString(), 4)~,
+~if (return_field == null) {~
+				record: Default~=return_name~() as ~=return_name~,
+~} ~
+				setParams: {
+					select in
+~
+{
+	int index = 0;
+	for (Query_param param : query.params) { ~
+					select.~=param.type.param_setter()~(~=index~, ~=param.name~)
+~
+		++index;
+	}
+} ~
+				},
+~if (return_field == null) {~
+				readRecord: {
+					reader, record in
+~	
+	int index = 0;
+	for (Table_field field : query.record_type.fields) { ~
+					record.~=field.name~ = reader.~=field.type.reader_getter()~(~=index~)
+~
+		++index;
+	}
+}
+else {~
+				readValue: {
+					return $0.~=return_field.type.reader_getter()~(0)
+~}
+~
+				})
+~
+switch (query.returns) {
+	case Iterator: ~
+			return sequence
+~
+		break;
+	case Array: ~
+			var records: [~=return_name~] = []
+			for record in sequence {
+				records.append(record.copy())
+			}
+			return records
+~
+		break;
+	default: ~
+			return sequence.generate().next()
+~
+		break;
+}
+~
+		}

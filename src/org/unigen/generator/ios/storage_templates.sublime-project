@@ -1,0 +1,6 @@
+{
+	"folders": [{
+            "path": ".",
+            "file_include_patterns": ["*.stswift"]
+        }],
+}
