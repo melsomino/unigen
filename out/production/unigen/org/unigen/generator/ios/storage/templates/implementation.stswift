@@ -97,6 +97,18 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage {
 			sql.append(field.name).append(" ").append(field.type.sql_type());
 			isFirst = false;
 		}
+		for (Table_index index : table.indexes) {
+			if (index.primary) {
+				sql.append(",\nPRIMARY KEY(");
+				String separator = "";
+				for (Table_field field : index.fields) {
+					sql.append(separator).append(field.name);
+					separator = ", ";
+				}
+				sql.append(")");
+				break;
+			}
+		}
 		sql.append("\n)");
 ~
 			try database.executeStatement(~=swift.make_string_literal(sql.toString(), 4)~)

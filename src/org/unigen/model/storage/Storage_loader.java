@@ -35,7 +35,7 @@ public class Storage_loader extends Loader {
 		Table_field[] fields = create_default_items(def, Table_field[]::new, (field_name, field_def) -> load_field(field_name, field_def, primary_key));
 		List<Table_index> indexes = new ArrayList<>();
 		if (!primary_key.isEmpty()) {
-			indexes.add(new Table_index("", primary_key.toArray(new Table_field[primary_key.size()]), true, false));
+			indexes.add(new Table_index("", primary_key.toArray(new Table_field[primary_key.size()]), true));
 		}
 		Record_type record_type = new Record_type(name + "Record", fields, true);
 		record_types.add(record_type);
