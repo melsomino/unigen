@@ -1,6 +1,7 @@
 package org.unigen.model.storage;
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.unigen.Parser;
 import org.unigen.Unigen_exception;
@@ -19,6 +20,7 @@ public class Storage_loader extends Loader {
 			return null;
 		}
 		String module = get_string(".name", def);
+		Storage_folder[] folders = create_default_items(get_object(".folders", def), Storage_folder[]::new, Storage_loader::load_folder);
 		List<Record_type> record_types = new ArrayList<>();
 		Storage_table[] tables = create_default_items(def, Storage_table[]::new, (name, source) -> load_table(name, (JSONObject) source, record_types));
 		Map<String, Storage_table> table_by_name = new HashMap<>();
@@ -26,7 +28,16 @@ public class Storage_loader extends Loader {
 			table_by_name.put(table.name, table);
 		}
 		Storage_query[] queries = create_default_items(get_object(".queries", def), Storage_query[]::new, (name, source) -> load_query(module, name, source, table_by_name, record_types));
-		return new Storage(module, get_integer(".version", 1, def), record_types.toArray(new Record_type[record_types.size()]), tables, queries);
+		return new Storage(module,
+			get_integer(".version", 1, def),
+			folders,
+			record_types.toArray(new Record_type[record_types.size()]),
+			tables,
+			queries);
+	}
+
+	private static Storage_folder load_folder(String name, Object source) throws Exception {
+		return new Storage_folder(Generator.lowercase_first_letter(name), source != null ? source.toString() : null);
 	}
 
 
@@ -70,7 +81,7 @@ public class Storage_loader extends Loader {
 		Select_section select;
 		if (def instanceof String) {
 			select = parser_select_section(module_name, name, (String) def, table_by_name, "Query \"" + name + "'\"", record_types);
-			return new Storage_query(Storage_query.Returns.Iterator, name, null, new Query_param[0], select.table, select.fields, null, select.record_type);
+			return new Storage_query(Storage_query.Returns.Iterator, name, null, new Query_param[0], select.table, select.fields, null, null, select.record_type);
 		}
 
 		Query_param[] params;
@@ -82,7 +93,16 @@ public class Storage_loader extends Loader {
 		}
 
 		select = parser_select_section(module_name, name, select_def, table_by_name, "Query \"" + name + "'\"", record_types);
-		return new Storage_query(Storage_query.Returns.parse(get_string(".returns", def_object)), name, get_string(".generate_record_type", def_object), params, select.table, select.fields, get_string(".where", def_object), select.record_type);
+		return new Storage_query(
+			Storage_query.Returns.parse(get_string(".returns", def_object)),
+			name,
+			get_string(".generate_record_type", def_object),
+			params,
+			select.table,
+			select.fields,
+			get_string(".where", def_object),
+			get_string(".orderby", def_object),
+			select.record_type);
 	}
 
 

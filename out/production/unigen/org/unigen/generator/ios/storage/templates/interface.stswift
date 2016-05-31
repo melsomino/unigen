@@ -6,6 +6,9 @@ public protocol ~=storage.module~Storage: DependentObject {
 	func readDatabase(read: (~=storage.module~DatabaseReader) throws -> Void) throws
 	func writeDatabase(write: (~=storage.module~DatabaseWriter) throws -> Void) throws
 
+~for (Storage_folder folder : storage.folders) {~
+	var ~=folder.name~: String { get }
+~}~
 
 	// MARK: - Record Type Creation
 

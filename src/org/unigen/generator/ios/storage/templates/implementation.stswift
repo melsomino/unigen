@@ -19,6 +19,14 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage {
 		return storage
 	}
 
+
+~for (Storage_folder folder : storage.folders) {~
+	public var ~=folder.name~: String {
+		return moduleStorage.getFileStoragePath("~=folder.path~")
+	}
+
+	
+~}~
 	public func readDatabase(read: (~=storage.module~DatabaseReader) throws -> Void) throws {
 		try storage.readDatabase {
 			database in

@@ -14,6 +14,9 @@ sql.append("SELECT ");
 	if (query.where != null) {
 		sql.append("\nWHERE ").append(query.where);
 	}
+	if (query.orderby != null) {
+		sql.append("\nORDER BY ").append(query.orderby);
+	}
 }
 ~
 		public ~+query_header~ {

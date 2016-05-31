@@ -31,9 +31,10 @@ public class Storage_query {
 	public final Storage_table table;
 	public final Table_field[] fields;
 	public final String where;
+	public final String orderby;
 	public final Record_type record_type;
 
-	public Storage_query(Returns returns, String name, String generate_record_type, Query_param[] params, Storage_table table, Table_field[] fields, String where, Record_type record_type) {
+	public Storage_query(Returns returns, String name, String generate_record_type, Query_param[] params, Storage_table table, Table_field[] fields, String where, String orderby, Record_type record_type) {
 		this.returns = returns;
 		this.name = name;
 		this.generate_record_type = generate_record_type;
@@ -41,6 +42,7 @@ public class Storage_query {
 		this.table = table;
 		this.fields = fields;
 		this.where = where;
+		this.orderby = orderby;
 		this.record_type = record_type;
 	}
 }
