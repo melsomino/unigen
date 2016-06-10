@@ -30,11 +30,11 @@ public class Ios_cloud_generator extends Generator {
 
 		new_location(uni.out.ios);
 		for (Cloud_api api : uni.cloud.apis) {
-			new_location("Interface/Uni");
+			new_location("Interfaces/Unified");
 			interface_template.generate_to_file(current_placement.resolve(api.name + "CloudApi.swift"), swift, uni, api);
 			close_location();
 
-			new_location("Implementation/Uni");
+			new_location("Implementation/Unified");
 			implementation_template.generate_to_file(current_placement.resolve("Default" + api.name + "CloudApi.swift"), swift, uni, api);
 			close_location();
 		}

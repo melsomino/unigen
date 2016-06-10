@@ -32,11 +32,11 @@ public class Ios_storage_generator extends Generator
 
 		new_location(uni.out.ios);
 
-		new_location("Interface/Uni");
+		new_location("Interfaces/Unified");
 		interface_template.generate_to_file(current_placement.resolve(uni.storage.module + "Storage.swift"), swift, uni, uni.storage);
 		close_location();
 
-		new_location("Implementation/Uni");
+		new_location("Implementation/Unified");
 		implementation_template.generate_to_file(current_placement.resolve("Default" + uni.storage.module + "Storage.swift"), swift, uni, uni.storage);
 		close_location();
 
