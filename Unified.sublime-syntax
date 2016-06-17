@@ -5,11 +5,11 @@ file_extensions:
   - uni
 scope: text.xml
 variables:
-  name: '\b([\w-]+)'
+  name: '\b([\w-\.]+)'
 contexts:
 
   main:
-    - match: '^\s*(\w+)'
+    - match: '^\s*{{name}}'
       captures:
         1: entity.name.tag
       push: attributes
@@ -23,7 +23,7 @@ contexts:
 
 
   id-attribute:
-    - match: '(#)\s*(\w+)'
+    - match: '(#)\s*{{name}}'
       captures:
         1: entity.other.attribute-name.html
         2: meta.attribute-with-value.id.html string.unquoted.html meta.toc-list.id.html
