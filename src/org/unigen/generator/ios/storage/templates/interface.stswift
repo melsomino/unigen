@@ -1,6 +1,6 @@
 ~+header~
 
-public protocol ~=storage.module~Storage: DependentObject {
+public protocol ~=storage.module~Storage: Dependent {
 
 	var moduleStorage: ModuleStorage { get }
 	func readDatabase(read: (~=storage.module~DatabaseReader) throws -> Void) throws

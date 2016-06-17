@@ -6,9 +6,11 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage {
 	// MARK: - Component
 
 
-	public func resolveDependency(dependency: DependencyResolver) {
-		storage = dependency.applicationStorage.getModuleStorage("~=storage.module~")
-		try! storage.initializeDatabase(DefaultDatabaseMaintenance())
+	public var dependency: DependencyResolver! {
+		didSet {
+			storage = dependency.applicationStorage.getModuleStorage("~=storage.module~")
+			try! storage.initializeDatabase(DefaultDatabaseMaintenance())
+		}
 	}
 
 

@@ -1,0 +1,84 @@
+%YAML 1.2
+---
+name: Unified
+file_extensions:
+  - uni
+scope: text.xml
+variables:
+  name: '\b([\w-]+)'
+contexts:
+
+  main:
+    - match: '^\s*(\w+)'
+      captures:
+        1: entity.name.tag
+      push: attributes
+
+  
+  attributes:
+    - match: '$'
+      pop: true
+    - include: id-attribute
+    - include: attribute
+
+
+  id-attribute:
+    - match: '(#)\s*(\w+)'
+      captures:
+        1: entity.other.attribute-name.html
+        2: meta.attribute-with-value.id.html string.unquoted.html meta.toc-list.id.html
+
+
+  attribute:
+    - match: '{{name}}\s*(=)'
+      captures:
+        1: entity.other.attribute-name.html
+        2: punctuation.separator.key-value.html
+      push: attribute-value
+
+    - match: '{{name}}'
+      captures:
+        1: entity.other.attribute-name.html
+
+  attribute-value:
+    - match: '(\()'
+      captures:
+        1: punctuation
+      set: list
+
+    - match: '"'
+      set: double-quoted
+
+    - match: "'"
+      set: single-quoted
+
+    - match: '([^\s\(\)''"=]+)'
+      scope: meta.attribute-with-value.html string.unquoted.html
+      pop: true
+
+  list:
+    - match: '(\))'
+      captures:
+        1: punctuation
+      pop: true
+
+    - match: '"'
+      push: double-quoted
+
+    - match: "'"
+      push: single-quoted
+
+    - match: '([^\s\(\)''"=]+)'
+      scope: meta.attribute-with-value.html string.unquoted.html
+
+  double-quoted:
+      - meta_scope: meta.attribute-with-value.html string.quoted.double.html
+      - match: '"'
+        scope: punctuation.definition.string.end.html
+        pop: true
+
+  single-quoted:
+      - meta_scope: meta.attribute-with-value.html string.quoted.single.html
+      - match: "'"
+        scope: punctuation.definition.string.end.html
+        pop: true

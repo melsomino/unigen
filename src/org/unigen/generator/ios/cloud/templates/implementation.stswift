@@ -5,11 +5,10 @@ public class Default~= api.name ~CloudApi: ~= api.name ~CloudApi {
 	// MARK: - Component
 
 
-	public func resolveDependency(dependency: DependencyResolver) {
-		cloudConnector = dependency.cloudConnector
+	public var dependency: DependencyResolver!
+	private var cloudConnector: CloudConnector {
+		return dependency.cloudConnector
 	}
-
-	private var cloudConnector: CloudConnector!
 
 
 	// MARK: - Methods

@@ -1,6 +1,6 @@
 ~+ header~
 
-public protocol ~= api.name ~CloudApi: DependentObject {
+public protocol ~= api.name ~CloudApi: Dependent {
 ~ for (Cloud_method method : api.methods) { ~
 	~+ method_header~
 ~ } ~
