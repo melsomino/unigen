@@ -1,6 +1,11 @@
 package org.unigen;
 
+
 public class Parser {
+
+	public interface Test_char {
+		boolean pass(char c);
+	}
 
 	public enum Whitespaces {
 		Pass, Not_pass
@@ -8,9 +13,22 @@ public class Parser {
 
 	public final String source;
 	private final String context_name;
-	private int pos;
+	public int pos;
 	private Whitespaces default_whitespaces;
 	private StringBuilder accumulator = new StringBuilder();
+	public Test_char whitespace_test = Parser::whitespace_or_new_line;
+
+	public static boolean is_whitespace(char c) {
+		return c == ' ' || c == '\t';
+	}
+
+	public static boolean is_new_line(char c) {
+		return c == '\r' || c == '\n';
+	}
+
+	public static boolean whitespace_or_new_line(char c) {
+		return is_whitespace(c) || is_new_line(c);
+	}
 
 
 	public Parser(String source, String context_name, Whitespaces default_whitespaces) {
@@ -35,7 +53,7 @@ public class Parser {
 
 
 	public void pass_whitespaces() {
-		while (pos < source.length() && Character.isWhitespace(source.charAt(pos))) {
+		while (pos < source.length() && whitespace_test.pass(source.charAt(pos))) {
 			++pos;
 		}
 	}
@@ -99,6 +117,22 @@ public class Parser {
 	}
 
 
+	public String pass(Test_char test, Whitespaces whitespaces) {
+		int start_pos = pos;
+		while (pos < source.length() && test.pass(source.charAt(pos))) {
+			++pos;
+		}
+		if (pos == start_pos) {
+			return null;
+		}
+		int end_pos = pos;
+		if (whitespaces == Whitespaces.Pass) {
+			pass_whitespaces();
+		}
+		return source.substring(start_pos, end_pos);
+	}
+
+
 	public boolean pass(String expected, Whitespaces whitespaces) {
 		int expected_length = expected.length();
 		if (pos + expected_length > source.length()) {
@@ -135,6 +169,19 @@ public class Parser {
 		String passed = source.substring(pos, terminator_pos);
 		pos = terminator_pos;
 		return passed;
+	}
+
+
+	public String pass_until_eof_or(Test_char terminator, Whitespaces whitespaces) {
+		int start_pos = pos;
+		while (pos < source.length() && !terminator.pass(source.charAt(pos))) {
+			++pos;
+		}
+		int end_pos = pos;
+		if (pos > start_pos && whitespaces == Whitespaces.Pass) {
+			pass_whitespaces();
+		}
+		return end_pos > start_pos ? source.substring(start_pos, end_pos) : null;
 	}
 
 
