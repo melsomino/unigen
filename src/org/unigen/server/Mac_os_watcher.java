@@ -6,7 +6,6 @@ import com.barbarysoftware.watchservice.WatchService;
 import com.barbarysoftware.watchservice.WatchableFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,10 +14,11 @@ import static com.barbarysoftware.watchservice.StandardWatchEventKind.ENTRY_MODI
 
 class Mac_os_watcher {
 	interface Notify {
-		void on_modified(Set<Path> file_paths) throws IOException;
+		void on_modified(Set<Path> file_paths) throws Exception;
 	}
 
-	static void watch(Set<Path> folder_paths, Notify notify) throws IOException, InterruptedException {
+	static void watch(Set<Path> folder_paths, Notify notify) throws Exception {
+		//noinspection InfiniteLoopStatement
 		while (true) {
 			WatchService watcher = WatchService.newWatchService();
 			for (Path folder_path : folder_paths) {

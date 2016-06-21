@@ -50,19 +50,24 @@ socket.onerror = function(error) {
 		margin-left: 18pt;
 	}
 	table.sections td {
-		padding-right: 48pt;
 	}
+	#log-container {
+		height: 100pt;
+		background: whitesmoke;
+		position: fixed;
+		bottom: 0px;
+		width: 100%;
+		border: 1px solid green;
+	}
+
 	#log {
 		font-family: courier;
 		font-size: 8pt;
 		color: gray;
 		height: 100pt;
 		overflow: auto;
-		background: whitesmoke;
-		position: fixed;
-		bottom: 0px;
 		padding: 8pt;
-		width: 100%;
+		border: 1px solid red;
 	}
 
 </style>
@@ -87,13 +92,15 @@ socket.onerror = function(error) {
 </td>
 <td valign=top>
 <div class=section-title>Connections</div>
-~for (Dev_events_websocket connection : server.activity.connections) {~
+~for (Dev_connection connection : server.active_connections()) {~
 	<div class=section-item>~=connection.toString()~</div>
 ~}~
 </td>
 </tr></table>
 
+<div id=log-container>
 <div id=log>
+</div>
 </div>
 </body>
 </html>

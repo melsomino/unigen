@@ -5,12 +5,12 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
 import java.net.InetSocketAddress;
 
-public class Dev_events_websocket extends WebSocketAdapter {
+public class Dev_connection extends WebSocketAdapter {
 
 
 	private final Dev_server server;
 
-	public Dev_events_websocket(Dev_server server) {
+	public Dev_connection(Dev_server server) {
 		this.server = server;
 	}
 

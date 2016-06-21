@@ -1,7 +1,6 @@
 package org.unigen.model.storage;
 
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.unigen.Parser;
 import org.unigen.Unigen_exception;
@@ -36,9 +35,16 @@ public class Storage_loader extends Loader {
 			queries);
 	}
 
+
+
+
+
 	private static Storage_folder load_folder(String name, Object source) throws Exception {
 		return new Storage_folder(Generator.lowercase_first_letter(name), source != null ? source.toString() : null);
 	}
+
+
+
 
 
 	private static Storage_table load_table(String name, JSONObject def, List<Record_type> record_types) throws Exception {
@@ -54,6 +60,9 @@ public class Storage_loader extends Loader {
 	}
 
 
+
+
+
 	private static Table_field load_field(String name, Object def, List<Table_field> primary_key) {
 		Field_parameters parameters = Field_parameters.parse((String) def);
 		Table_field field = new Table_field(name, parameters.type, parameters.included_in_primary_key);
@@ -64,10 +73,17 @@ public class Storage_loader extends Loader {
 	}
 
 
+
+
+
 	private static class Select_section {
 		final Storage_table table;
 		final Table_field[] fields;
 		private final Record_type record_type;
+
+
+
+
 
 		private Select_section(Storage_table table, Table_field[] fields, Record_type record_type) {
 			this.table = table;
@@ -75,6 +91,9 @@ public class Storage_loader extends Loader {
 			this.record_type = record_type;
 		}
 	}
+
+
+
 
 
 	private static Storage_query load_query(String module_name, String name, Object def, Map<String, Storage_table> table_by_name, List<Record_type> record_types) throws Exception {
@@ -106,6 +125,9 @@ public class Storage_loader extends Loader {
 	}
 
 
+
+
+
 	private static Select_section parser_select_section(String module_name, String query_name, String select, Map<String, Storage_table> table_by_name, String referrer, List<Record_type> record_types) throws Unigen_exception {
 		Parser parser = new Parser(select, referrer + " table", Parser.Whitespaces.Pass);
 		String table_name = parser.expect_name();
@@ -134,13 +156,17 @@ public class Storage_loader extends Loader {
 			fields = fields_builder.toArray(new Table_field[fields_builder.size()]);
 			record_type = new Record_type(module_name + "Storage" + Generator.uppercase_first_letter(query_name) + "Record", fields, false);
 			record_types.add(record_type);
-		} else {
+		}
+		else {
 			fields = table.fields;
 			record_type = table.record_type;
 		}
 
 		return new Select_section(table, fields, record_type);
 	}
+
+
+
 
 
 	private static Query_param load_query_param(String name, Object def) {

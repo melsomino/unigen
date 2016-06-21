@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dev_server_configuration {
-	public final Path configuration_file_path;
-	public final DeclarationElement[] declarations;
-	public final Source[] sources;
+	public Path configuration_file_path;
+	public DeclarationElement[] declarations;
+	public Source[] sources;
 
-	public Dev_server_configuration(Path configuration_file_path) throws DeclarationError {
+
+
+
+
+	void load(Path configuration_file_path) throws DeclarationError {
 		this.configuration_file_path = configuration_file_path;
 		declarations = DeclarationElement.load(configuration_file_path);
 		Path base_path = configuration_file_path.getParent();
@@ -27,7 +31,10 @@ public class Dev_server_configuration {
 	}
 
 
-	public Source find_source_with_path(Path path) {
+
+
+
+	Source find_source_with_path(Path path) {
 		for (Source source : sources) {
 			if (source.path.equals(path)) {
 				return source;
@@ -36,6 +43,10 @@ public class Dev_server_configuration {
 		return null;
 	}
 
+
+
+
+
 	public class Source {
 
 		public final DeclarationElement declaration;
@@ -43,9 +54,13 @@ public class Dev_server_configuration {
 		public final boolean is_module;
 		public final String name;
 
+
+
+
+
 		public Source(Path base_path, DeclarationElement declaration) throws DeclarationError {
 			this.declaration = declaration;
-			path = base_path.resolve(declaration.get_string_attribute("path")).normalize();
+			path = base_path.resolve(declaration.attributes[1].name).normalize();
 
 			DeclarationElement[] declarations = DeclarationElement.load(path);
 			DeclarationElement module_element = DeclarationElement.find_first_element_with_name("module", declarations);
