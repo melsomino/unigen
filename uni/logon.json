@@ -1,0 +1,43 @@
+{
+	"out": {
+		"ios": "out/ios/logon",
+		"android": "out/android/logon"
+	},
+
+
+	"cloud": {
+		"Logon": {
+			".package": "ru.tensor.sbis.logon.cloud",
+			".url": "auth/service",
+			"САП.АутентифицироватьРасш ~ login": {
+				"params": {
+					"login": "string",
+					"password": "string"
+				},
+				"result": {
+					".modifier": ":",
+					"ИдСессии ~ sessionId": "string",
+					"ВременныйЛогин ~ tempLogin": "string",
+					"НадежныйПароль ~ strongPassword": "string",
+					"ТребуемаяСложность ~ passwordComplexity": "string"
+				}
+			},
+			" Персона.МояПодробнаяИнформация ~ getAuthPersonDetails": {
+				"url": "service",
+				"result": {
+					".modifier": "?",
+					".type": "AuthPersonDetails",
+					"Персона ~ personId": "uuid",
+					"Имя ~ firstName": "string",
+					"Фамилия ~ lastName": "string",
+					"Отчество ~ patronimity": "string",
+					"Должность ~ occupation": "string"
+				}
+			},
+			"САП.Выход ~ logoff": {
+				"result": "bool"
+			}
+		}
+	}
+}
+

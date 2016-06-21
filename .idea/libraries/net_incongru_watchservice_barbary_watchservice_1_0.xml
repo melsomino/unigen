@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="net.incongru.watchservice:barbary-watchservice:1.0" type="repository">
+    <properties maven-id="net.incongru.watchservice:barbary-watchservice:1.0" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/barbary-watchservice-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jna-3.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

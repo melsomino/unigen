@@ -24,6 +24,9 @@ public class DeclarationAttribute {
 	}
 
 	public String getString() throws DeclarationError {
+		if (value == null) {
+			return null;
+		}
 		if (value instanceof String) {
 			return (String) value;
 		}

@@ -1,6 +1,6 @@
 package org.unigen.temple;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 
@@ -13,7 +13,7 @@ public class Template {
 	}
 
 
-	public void generate(PrintStream writer, Object... args) throws Exception {
+	public void generate(PrintWriter writer, Object... args) throws Exception {
 		Object[] method_args = new Object[1 + args.length];
 		method_args[0] = writer;
 		System.arraycopy(args, 0, method_args, 1, args.length);
@@ -22,7 +22,7 @@ public class Template {
 
 
 	public void generate_to_file(Path file_path, Object... args) throws Exception {
-		PrintStream file = new PrintStream(file_path.toFile(), "utf8");
+		PrintWriter file = new PrintWriter(file_path.toFile(), "utf8");
 		generate(file, args);
 		file.close();
 	}

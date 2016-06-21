@@ -1,0 +1,48 @@
+%YAML 1.2
+---
+name: sthtml
+file_extensions:
+  - sthtml
+scope: text
+contexts:
+
+  main:
+    - match: ''
+      push: 'Packages/HTML/HTML.sublime-syntax'
+      with_prototype:
+        - include: include
+        - include: expression
+        - include: code
+
+  include:
+    - match: (~\+)
+      captures:
+        1: comment
+      push:
+        - match: (~)
+          captures:
+            1: comment
+          pop: true
+
+  expression:
+    - match: (~=)
+      captures:
+        1: comment
+      push:
+        - meta_scope: comment
+        - match: (~)
+          captures:
+            1: comment
+          pop: true
+
+  code:
+    - match: (~)
+      captures:
+        1: comment
+      push:
+        - meta_scope: comment
+        - match: (~)
+          captures:
+            1: comment
+          pop: true
+

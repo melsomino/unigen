@@ -39,9 +39,9 @@ public class Template_engine {
 		}
 
 		code.append("public class ").append(generator_class_name).append(" {\n");
-		code.append("\tpublic void generate(").append("PrintStream _out");
+		code.append("\tpublic void generate(").append("PrintWriter _out");
 		List<Class> arg_types_builder =new ArrayList<>();
-		arg_types_builder.add(PrintStream.class);
+		arg_types_builder.add(PrintWriter.class);
 		if (shared_arg_names_and_types != null) {
 			add_arg_names_and_types(arg_types_builder, code, shared_arg_names_and_types);
 		}

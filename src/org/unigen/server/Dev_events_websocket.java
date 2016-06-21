@@ -3,10 +3,21 @@ package org.unigen.server;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
+import java.net.InetSocketAddress;
+
 public class Dev_events_websocket extends WebSocketAdapter {
+
+
+	private final Dev_server server;
+
+	public Dev_events_websocket(Dev_server server) {
+		this.server = server;
+	}
+
 	@Override
 	public void onWebSocketConnect(Session session) {
 		super.onWebSocketConnect(session);
+		server.activity.connections.add(this);
 	}
 
 
@@ -18,6 +29,7 @@ public class Dev_events_websocket extends WebSocketAdapter {
 
 	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
+		server.activity.connections.remove(this);
 		super.onWebSocketClose(statusCode, reason);
 	}
 
@@ -25,5 +37,11 @@ public class Dev_events_websocket extends WebSocketAdapter {
 	@Override
 	public void onWebSocketError(Throwable cause) {
 		super.onWebSocketError(cause);
+	}
+
+	@Override
+	public String toString() {
+		InetSocketAddress address = getSession().getRemoteAddress();
+		return address.getHostName();
 	}
 }

@@ -1,0 +1,55 @@
+{
+	"out": {
+		"ios": "out/ios/news",
+		"android": "out/android/news"
+	},
+
+
+	"cloud": {
+		"News": {
+			".package": "ru.tensor.sbis.news.cloud",
+			".url": "service",
+			"Новость.NewsFromService ~ loadTopicPortion": {
+				"params": {
+					"Сортировка ~ orderBy": "string",
+					"Навигация ~ navigation": {
+						"Страница ~ page": "int",
+						"РазмерСтраницы ~ pageSize": "int",
+						"ЕстьЕще ~ hasMore": "bool"
+					}
+				},
+				"result": {
+					".type": "TopicPortion",
+					"rec ~ topics": {
+						".modifier": "*",
+						"@Новость ~ internalId": "int",
+						"ДатаВремя ~ time": "dateTime",
+						"Заголовок ~ title": "string",
+						"Текст ~ text": "string",
+						"АвторКонтрагент ~ authorContractor": "string",
+						"АвторКонтрагентНазвание ~ authorContractorTitle": "string",
+						"АвторАккаунт ~ authorAccount": "int",
+						"АвторЧастноеЛицо ~ authorPerson": "int",
+						"АвторПодразделение ~ authorDepartment": "int",
+						"АвторМенеджер ~ authorManager": "string",
+						"Тип ~ type": "int",
+						"GUID ~ id": "uuid",
+						"КоличествоКомментариев ~ commentCount": "int",
+						"Прочитана ~ read": "bool",
+						"Понравилась ~ good": "int",
+						"НеПонравилась ~ bad": "int",
+						"МожноКомментировать ~ canComment": "bool",
+						"МожноОценивать ~ canRate": "bool",
+						"Оценка ~ rate": "int",
+						"Скрыта ~ hidden": "bool",
+						"ИзображениеGUID ~ imageId": "uuid",
+						"ИзображениеGUID_mini ~ miniImageId": "uuid",
+
+					},
+					"nav": "bool"
+				}
+			}
+		}
+	}
+}
+
