@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="jetty">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../libs/jetty-distribution-9.3.9.v20160517/lib" />
+      <root url="file://$PROJECT_DIR$/../../libs/jetty-distribution-9.3.9.v20160517/lib/websocket" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../libs/jetty-distribution-9.3.9.v20160517/lib" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../../libs/jetty-distribution-9.3.9.v20160517/lib/websocket" recursive="false" />
+  </library>
+</component>

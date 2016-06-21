@@ -2,6 +2,7 @@
   <dictionary name="vlasov">
     <words>
       <w>unigen</w>
+      <w>websocket</w>
     </words>
   </dictionary>
 </component>
