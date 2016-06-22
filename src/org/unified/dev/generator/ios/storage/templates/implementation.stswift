@@ -1,0 +1,139 @@
+~+header~
+
+public class Default~=storage.module~Storage: ~=storage.module~Storage {
+
+
+	// MARK: - Component
+
+
+	public var dependency: DependencyResolver! {
+		didSet {
+			storage = dependency.applicationStorage.getModuleStorage("~=storage.module~")
+			try! storage.initializeDatabase(DefaultDatabaseMaintenance())
+		}
+	}
+
+
+	// MARK: - NotificationsStorage
+
+
+	public var moduleStorage: ModuleStorage { 
+		return storage
+	}
+
+
+~for (Storage_folder folder : storage.folders) {~
+	public var ~=folder.name~: String {
+		return moduleStorage.getFileStoragePath("~=folder.path~")
+	}
+
+	
+~}~
+	public func readDatabase(read: (~=storage.module~DatabaseReader) throws -> Void) throws {
+		try storage.readDatabase {
+			database in
+			try read(DatabaseReader(database))
+		}
+	}
+
+	public func writeDatabase(write: (~=storage.module~DatabaseWriter) throws -> Void) throws {
+		try storage.writeDatabase {
+			database in
+			try write(DatabaseWriter(database))
+		}
+	}
+
+
+	// MARK: - RecordTypes
+
+
+~ for (Record_type record_type : storage.record_types ) { ~
+~+implementation_record_type~
+~ } ~
+
+
+	// MARK: - DatabaseReader
+
+
+	public class DatabaseReader: ~=storage.module~DatabaseReader {
+		public var database: StorageDatabase
+
+		init(_ database: StorageDatabase) {
+			self.database = database
+		}
+
+~for (Storage_query query : storage.queries) {~
+~+implementation_query~
+~}~
+
+	}
+
+
+	// MARK: - DatabaseWriter
+
+
+	public class DatabaseWriter: DatabaseReader, ~=storage.module~DatabaseWriter {
+		override init(_ database: StorageDatabase) {
+~for (Storage_table table : storage.tables) { 
+	String name = org.unified.dev.generator.Generator.lowercase_first_letter(table.name);
+~
+			~=name~StatementFactory = DatabaseRecordStatementFactory<~=table.record_type.name~>(database, DatabaseWriter.~=name~SqlFactory)
+~}~
+			super.init(database)
+		}
+
+~for (Storage_table table : storage.tables) {~
+~+implementation_table~
+~}~
+
+	}
+
+	// MARK: - Internals
+
+
+	private var storage: ModuleStorage!
+	public class DefaultDatabaseMaintenance: DatabaseMaintenance {
+		public let requiredVersion = ~=storage.version~
+
+		public func createTables(database: StorageDatabase) throws {
+~ for (Storage_table table : storage.tables) { 
+		StringBuilder sql = new StringBuilder();
+		sql.append("CREATE TABLE ").append(table.name).append(" (\n");
+		boolean isFirst = true;
+		for (Table_field field : table.fields) {
+			if (!isFirst) {
+				sql.append(",\n");
+			}
+			sql.append(field.name).append(" ").append(field.type.sql_type());
+			isFirst = false;
+		}
+		for (Table_index index : table.indexes) {
+			if (index.primary) {
+				sql.append(",\nPRIMARY KEY(");
+				String separator = "";
+				for (Table_field field : index.fields) {
+					sql.append(separator).append(field.name);
+					separator = ", ";
+				}
+				sql.append(")");
+				break;
+			}
+		}
+		sql.append("\n)");
+~
+			try database.executeStatement(~=swift.make_string_literal(sql.toString(), 4)~)
+~ } ~
+		}
+
+		public func migrate(database: StorageDatabase, fromVersion: Int) throws -> Bool {
+			return try ~=storage.module~DatabaseMigration.migrate(database, fromVersion: fromVersion)
+		}
+	}
+}
+
+
+
+
+
+
+

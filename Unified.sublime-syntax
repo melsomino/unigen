@@ -2,7 +2,7 @@
 ---
 name: Unified
 file_extensions:
-  - uni
+  - module
 scope: source.yaml
 variables:
   unquoted: '([^\s\(\)''\=\~]+)'

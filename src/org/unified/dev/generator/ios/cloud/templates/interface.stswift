@@ -1,0 +1,31 @@
+~+ header~
+
+public protocol ~= module.name ~CloudApi: Dependent {
+~ for (Cloud_method method : api.methods) { ~
+	~+ method_header~
+~ } ~
+
+~ for (Cloud_struct_type struct_type : api.struct_types) { ~
+~	if (struct_type.used_in_method_params) { ~
+	func create~= struct_type.implementation_name ~() -> ~= struct_type.interface_name ~
+~	} ~
+~ } ~
+}
+
+
+
+
+
+~ for (Cloud_struct_type struct : api.struct_types) { ~
+public protocol ~= struct.interface_name ~: AnyObject {
+~ for(Cloud_struct_field field: struct.fields) { ~
+	var ~= field.identifier ~: ~= swift.field_type_declaration(field.declaration) ~ { get set }
+~ } ~
+}
+
+
+
+
+
+~ } ~
+
