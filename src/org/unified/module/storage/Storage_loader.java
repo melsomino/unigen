@@ -19,23 +19,21 @@ public class Storage_loader {
 	public static Storage load_from(Declaration_element storage_element, String module_name) throws Exception {
 		List<Record_type> record_types = new ArrayList<>();
 		Map<String, Storage_table> table_by_name = new HashMap<>();
-		List<Storage_folder> folders = new ArrayList<>();
-		List<Storage_table> tables = new ArrayList<>();
-		List<Storage_query> queries = new ArrayList<>();
 
-		Module_loader.load_default_items(storage_element, null, tables, table_element -> {
+		Storage_table[] tables = Module_loader.load_default_items(storage_element, null, Storage_table[]::new, table_element -> {
 			Storage_table table = load_table_from(table_element, record_types);
 			table_by_name.put(table.name, table);
 			return table;
 		});
 
-		Module_loader.load_default_items(storage_element, "+queries", queries, query_element -> load_query_from(query_element, module_name, table_by_name, record_types));
+		Storage_query[] queries = Module_loader.load_default_items(storage_element, "+queries", Storage_query[]::new,
+			query_element -> load_query_from(query_element, module_name, table_by_name, record_types));
 
-		Module_loader.load_default_items(storage_element, "+folders", folders, folder_element -> new Storage_folder(folder_element.name(), folder_element.value()));
+		Storage_folder[] folders = Module_loader.load_default_items(storage_element, "+folders", Storage_folder[]::new,
+			folder_element -> new Storage_folder(folder_element.name(), folder_element.value()));
 
 
-		return new Storage(module_name, storage_element.get_int_attribute("version", 1), folders.toArray(new Storage_folder[folders.size()]),
-			record_types.toArray(new Record_type[record_types.size()]), tables.toArray(new Storage_table[tables.size()]), queries.toArray(new Storage_query[queries.size()]));
+		return new Storage(module_name, storage_element.get_int_attribute("version", 1), folders, record_types.toArray(new Record_type[record_types.size()]), tables, queries);
 	}
 
 
@@ -43,18 +41,16 @@ public class Storage_loader {
 
 
 	private static Storage_table load_table_from(Declaration_element table_element, List<Record_type> record_types) throws Exception {
-		List<Table_field> fields = new ArrayList<>();
 		List<Table_field> primary_key = new ArrayList<>();
-		Module_loader.load_default_items(table_element, null, fields, (field_element) -> load_field_from(field_element, primary_key));
+		Table_field[] fields = Module_loader.load_default_items(table_element, null, Table_field[]::new, (field_element) -> load_field_from(field_element, primary_key));
 		List<Table_index> indexes = new ArrayList<>();
 		if (!primary_key.isEmpty()) {
 			indexes.add(new Table_index("", primary_key.toArray(new Table_field[primary_key.size()]), true));
 		}
 		String name = table_element.name();
-		Table_field[] field_array = fields.toArray(new Table_field[fields.size()]);
-		Record_type record_type = new Record_type(name + "Record", field_array, true);
+		Record_type record_type = new Record_type(name + "Record", fields, true);
 		record_types.add(record_type);
-		return new Storage_table(name, field_array, indexes.toArray(new Table_index[indexes.size()]), record_type);
+		return new Storage_table(name, fields, indexes.toArray(new Table_index[indexes.size()]), record_type);
 	}
 
 
@@ -95,8 +91,8 @@ public class Storage_loader {
 
 	private static Storage_query load_query_from(Declaration_element query_element, String module_name, Map<String, Storage_table> table_by_name, List<Record_type> record_types) throws Exception {
 		String name = query_element.name();
-		List<Query_param> params = new ArrayList<>();
-		Module_loader.load_default_items(query_element, null, params, Storage_loader::load_query_param);
+		Query_param[] params = Module_loader.load_default_items(query_element, null, Query_param[]::new, Storage_loader::load_query_param);
+
 		From_section from = null;
 		Storage_query.Returns returns = Storage_query.Returns.Iterator;
 		String alias = null;
@@ -135,7 +131,7 @@ public class Storage_loader {
 			throw new Unified_error("Query \"" + name + "\" does not specify required attribute \"from\"");
 		}
 
-		return new Storage_query(returns, name, alias, params.toArray(new Query_param[params.size()]), from.table, from.fields, where, order_by, from.record_type);
+		return new Storage_query(returns, name, alias, params, from.table, from.fields, where, order_by, from.record_type);
 	}
 
 

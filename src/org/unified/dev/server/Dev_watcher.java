@@ -8,10 +8,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Dev_server_watcher {
+public class Dev_watcher {
 
 
-	Dev_server_watcher(Dev_server server) {
+	Dev_watcher(Dev_server server) {
 		this.server = server;
 	}
 
@@ -36,10 +36,10 @@ public class Dev_server_watcher {
 		thread = new Thread(() -> {
 			try {
 				if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-					Dev_server_watcher_mac_os.watch(folder_paths, this::on_modified);
+					Dev_watcher_mac_os.watch(folder_paths, this::on_modified);
 				}
 				else {
-					Dev_server_watcher_legacy.watch(folder_paths, this::on_modified);
+					Dev_watcher_legacy.watch(folder_paths, this::on_modified);
 				}
 			}
 			catch (Exception e) {

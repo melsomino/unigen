@@ -20,7 +20,7 @@ public class Declaration_attribute {
 				return enumValue;
 			}
 		}
-		throw new Declaration_error("Expected one of: " + valuesByLowercaseName.values(), null);
+		throw new Declaration_error(null, "Expected one of: " + valuesByLowercaseName.values(), null);
 	}
 
 	public String getString() throws Declaration_error {
@@ -30,7 +30,7 @@ public class Declaration_attribute {
 		if (value instanceof String) {
 			return (String) value;
 		}
-		throw new Declaration_error("Expected string value", null);
+		throw new Declaration_error(null, "Expected string value", null);
 	}
 
 	private static float parseFloat(String string) throws Declaration_error {
@@ -46,7 +46,7 @@ public class Declaration_attribute {
 		} catch (Exception error) {
 			parseError = error;
 		}
-		throw new Declaration_error("Expected float value", parseError);
+		throw new Declaration_error(null, "Expected float value", parseError);
 	}
 
 	public boolean getBool() throws Declaration_error {
@@ -62,7 +62,7 @@ public class Declaration_attribute {
 				return false;
 			}
 		}
-		throw new Declaration_error("Boolean value expected (\"true\" or \"false\")", null);
+		throw new Declaration_error(null, "Boolean value expected (\"true\" or \"false\")", null);
 	}
 
 

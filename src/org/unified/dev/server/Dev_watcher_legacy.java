@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
-class Dev_server_watcher_legacy {
+class Dev_watcher_legacy {
 	interface Notify {
 		void on_modified(Set<Path> file_paths) throws Exception;
 	}

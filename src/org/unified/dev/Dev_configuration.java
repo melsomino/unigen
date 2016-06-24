@@ -47,6 +47,19 @@ public class Dev_configuration {
 
 
 
+	public Source find_repository(String name) {
+		for (Source source : sources) {
+			if (!source.is_module && source.name.equalsIgnoreCase(name)) {
+				return source;
+			}
+		}
+		return null;
+	}
+
+
+
+
+
 	public class Source {
 
 		public final Declaration_element declaration;
@@ -55,6 +68,10 @@ public class Dev_configuration {
 		public final String name;
 		public final Path ios_out;
 		public final Path android_out;
+		public String status;
+		public String status_class;
+		public String status_details;
+		public String status_time;
 
 
 

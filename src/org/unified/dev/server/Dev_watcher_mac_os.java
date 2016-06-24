@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static com.barbarysoftware.watchservice.StandardWatchEventKind.ENTRY_MODIFY;
 
-class Dev_server_watcher_mac_os {
+class Dev_watcher_mac_os {
 	interface Notify {
 		void on_modified(Set<Path> file_paths) throws Exception;
 	}

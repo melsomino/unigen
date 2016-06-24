@@ -49,7 +49,7 @@ public class Declaration_element {
 			String file_content = new String(Files.readAllBytes(file_path), Charset.forName("UTF-8"));
 			return parse(file_content);
 		} catch (IOException e) {
-			throw new Declaration_error("Can not load_from declarations from file: " + file_path.toAbsolutePath(), e);
+			throw new Declaration_error(null, "Can not load_from declarations from file: " + file_path.toAbsolutePath(), e);
 		}
 	}
 
@@ -191,7 +191,7 @@ public class Declaration_element {
 			while (!parser.pass(")", Parser.Whitespaces.Pass)) {
 				Object value = pass_name_or_value(parser);
 				if (value == null) {
-					throw new Declaration_error("Invalid value list", null);
+					throw new Declaration_error(null, "Invalid value list", null);
 				}
 				values.add((String) value);
 			}
@@ -205,12 +205,12 @@ public class Declaration_element {
 
 
 	private static String pass_name_or_value(Parser parser) throws Declaration_error {
-		if (parser.pass("'", Parser.Whitespaces.Pass)) {
+		if (parser.pass("'", Parser.Whitespaces.Not_pass)) {
 			String value = parser.pass_until("'");
 			try {
 				parser.expect("'", Parser.Whitespaces.Pass);
 			} catch (Unified_error unigen_exception) {
-				throw new Declaration_error("Invalid value", unigen_exception);
+				throw new Declaration_error(null, "Invalid value", unigen_exception);
 			}
 			return value;
 		}
@@ -253,7 +253,7 @@ public class Declaration_element {
 			}
 			return passed;
 		}
-		throw new Declaration_error("name expected", null);
+		throw new Declaration_error(null, "name expected", null);
 	}
 
 

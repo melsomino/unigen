@@ -1,8 +1,8 @@
 package org.unified.module.cloud;
 
-import org.unified.Unified_error;
 import org.unified.declaration.Declaration_attribute;
 import org.unified.declaration.Declaration_element;
+import org.unified.declaration.Declaration_error;
 import org.unified.dev.generator.Generator;
 import org.unified.module.Compound_name;
 import org.unified.module.Module_loader;
@@ -25,7 +25,7 @@ public class Cloud_api_loader {
 			struct_types_by_name.put(type_name, struct_type);
 		});
 
-		Cloud_method[] methods = Module_loader.load_default_array(cloud_element, null, Cloud_method[]::new,
+		Cloud_method[] methods = Module_loader.load_default_items(cloud_element, null, Cloud_method[]::new,
 			(method_element) -> load_method_from(method_element, module_name, url, protocol, struct_types_by_name));
 
 		Cloud_struct_type[] struct_types = new Cloud_struct_type[struct_types_by_name.size()];
@@ -82,12 +82,13 @@ public class Cloud_api_loader {
 
 
 
-		static Declaration_summary from(Declaration_element element) throws Unified_error {
+		static Declaration_summary from(Declaration_element element) throws Declaration_error {
 			Cloud_type_modifier modifier = Cloud_type_modifier.Missing;
 			Cloud_type_encoding encoding = Cloud_type_encoding.JsonValue;
 			Cloud_primitive_type primitive_type = null;
 
-			for (Declaration_attribute attribute : element.attributes) {
+			for (int i = 1; i < element.attributes.length; ++i) {
+				Declaration_attribute attribute = element.attributes[i];
 				String lowercase_name = attribute.name.toLowerCase();
 				switch (lowercase_name) {
 					case "json-string":
@@ -112,7 +113,7 @@ public class Cloud_api_loader {
 						Cloud_primitive_type test_primitive_type = Cloud_primitive_type.try_parse(lowercase_name);
 						if (test_primitive_type != null) {
 							if (primitive_type != null) {
-								throw new Unified_error("Primitive type " + primitive_type.name + " redeclared to " + test_primitive_type.name);
+								throw new Declaration_error(element, "Primitive type " + primitive_type.name + " redeclared to " + test_primitive_type.name, null);
 							}
 							primitive_type = test_primitive_type;
 						}
@@ -139,7 +140,7 @@ public class Cloud_api_loader {
 			return new Cloud_type_declaration(summary.primitive_type, summary.modifier, Cloud_type_encoding.JsonValue);
 		}
 
-		Cloud_struct_field[] fields = Module_loader.load_default_array(element, null, Cloud_struct_field[]::new, (field_element) -> {
+		Cloud_struct_field[] fields = Module_loader.load_default_items(element, null, Cloud_struct_field[]::new, (field_element) -> {
 			Compound_name compound_name = new Compound_name(field_element, Compound_name.Identifier_style.Camel);
 			Cloud_type_declaration declaration = load_type_declaration(field_element, module_name, struct_type_name + Generator.uppercase_first_letter(compound_name.identifier),
 				used_in_method_params, struct_types_by_name);

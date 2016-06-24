@@ -1,5 +1,7 @@
 package org.unified.dev.server;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.unified.declaration.Declaration_error;
 import org.unified.dev.Dev_configuration;
 import org.unified.dev.generator.Module_generator;
@@ -7,12 +9,15 @@ import org.unified.module.Module;
 import org.unified.module.Module_loader;
 
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 
 public class Dev_server {
 
 	public Dev_configuration configuration = new Dev_configuration();
-	public Dev_server_activity activity = new Dev_server_activity(this);
+	public Dev_activity activity = new Dev_activity(this);
+	public Path dev_web_path = null;
 
 
 
@@ -20,6 +25,7 @@ public class Dev_server {
 
 	public void configure(Path configuration_file_path) throws Declaration_error {
 		org.apache.log4j.BasicConfigurator.configure();
+		LogManager.getRootLogger().setLevel(Level.INFO);
 
 		configuration.load(configuration_file_path);
 		http.configure(configuration);
@@ -28,9 +34,14 @@ public class Dev_server {
 
 
 
-	public Dev_server_websocket_connection[] active_connections() {
-		return activity.connections.toArray(new Dev_server_websocket_connection[activity.connections.size()]);
+
+
+	public Dev_websocket_connection[] active_connections() {
+		return activity.connections.toArray(new Dev_websocket_connection[activity.connections.size()]);
 	}
+
+
+
 
 
 	void on_configuration_file_changed() throws Declaration_error {
@@ -42,10 +53,28 @@ public class Dev_server {
 
 
 	void on_source_file_changed(Dev_configuration.Source source) throws Exception {
+		source.status_time = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		if (source.is_module) {
-			Module module = Module_loader.load(source.path);
-			Module_generator.generate(module, source.ios_out, source.android_out);
+			try {
+				Module module = Module_loader.load(source.path);
+				Module_generator.generate(module, source.ios_out, source.android_out);
+				source.status = "generated";
+				source.status_class = "ok";
+				source.status_details = null;
+			}
+			catch(Exception error) {
+				source.status = "generation failed";
+				source.status_class = "failed";
+				source.status_details = error.getMessage();
+			}
+			activity.broadcast("module-changed", source.name, source.path);
 		}
+		else {
+			source.status = "modified";
+			source.status_class = "info";
+			activity.broadcast("repository-changed", source.name, source.path);
+		}
+		activity.broadcast("state-changed");
 	}
 
 
@@ -59,8 +88,7 @@ public class Dev_server {
 			terminated.await();
 			http.stop();
 			watcher.stop();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -75,8 +103,8 @@ public class Dev_server {
 
 	// Internals
 
-	private Dev_server_http_server http = new Dev_server_http_server(this);
-	private Dev_server_watcher watcher = new Dev_server_watcher(this);
+	private Dev_servlet_server http = new Dev_servlet_server(this);
+	private Dev_watcher watcher = new Dev_watcher(this);
 	private CountDownLatch terminated = new CountDownLatch(1);
 
 

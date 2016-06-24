@@ -58,14 +58,6 @@ public class Module_loader {
 
 
 
-	public static <T> T load_object(Declaration_element element, Object_factory<T> factory) throws Exception {
-		return element != null ? factory.create_from(element) : null;
-	}
-
-
-
-
-
 	public static void enum_default_items(Declaration_element element, String optional_child_name, Element_handler element_handler) throws Exception {
 		if (element != null && optional_child_name != null) {
 			element = element.first_child_with_name(optional_child_name);
@@ -74,7 +66,7 @@ public class Module_loader {
 			return;
 		}
 		for (Declaration_element child_element : element.children) {
-			if (element.attributes.length > 0 && !element.attributes[0].name.startsWith("+")) {
+			if (child_element.attributes.length > 0 && !child_element.attributes[0].name.startsWith("+")) {
 				element_handler.apply(child_element);
 			}
 		}
@@ -84,17 +76,9 @@ public class Module_loader {
 
 
 
-	public static <T> void load_default_items(Declaration_element element, String optional_child_name, List<T> items, Object_factory<T> item_loader) throws Exception {
-		enum_default_items(element, optional_child_name, child_element -> items.add(item_loader.create_from(child_element)));
-	}
-
-
-
-
-
-	public static <T> T[] load_default_array(Declaration_element element, String optional_child_name, Array_factory<T> array_factory, Object_factory<T> item_loader) throws Exception {
+	public static <T> T[] load_default_items(Declaration_element element, String optional_child_name, Array_factory<T> array_factory, Object_factory<T> item_loader) throws Exception {
 		List<T> items = new ArrayList<>();
-		load_default_items(element, optional_child_name, items, item_loader);
+		enum_default_items(element, optional_child_name, child_element -> items.add(item_loader.create_from(child_element)));
 		return items.toArray(array_factory.create(items.size()));
 	}
 

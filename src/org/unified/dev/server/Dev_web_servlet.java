@@ -9,24 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class Dev_server_html_servlet extends org.eclipse.jetty.servlet.NoJspServlet {
+public class Dev_web_servlet extends org.eclipse.jetty.servlet.NoJspServlet {
 
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 		Dev_server server = (Dev_server) getServletContext().getAttribute("dev_server");
-
-		Template_engine templates = new Template_engine("html", Dev_server_html_servlet.class, "templates");
-		templates.shared_header = "" +
-			"import java.io.*;\n" +
-			"import org.unified.declaration.*;\n" +
-			"import org.unified.dev.*;\n" +
-			"import org.unified.dev.server.*;\n";
-		templates.shared_arg_names_and_types = new Object[]{"server", Dev_server.class};
-
 		try {
-			Template template = templates.load("index", null);
-			template.generate(response.getWriter(), server);
+			String content = server.dev_web_path != null ? Template_engine.read_text_file(server.dev_web_path.resolve("index.html")) : Template_engine.read_text_resource(
+				Dev_web_servlet.class, "web/index.html");
+			response.getWriter().print(content);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

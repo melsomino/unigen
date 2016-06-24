@@ -8,10 +8,10 @@ import org.unified.declaration.Declaration_element;
 import org.unified.declaration.Declaration_error;
 import org.unified.dev.Dev_configuration;
 
-class Dev_server_http_server {
+class Dev_servlet_server {
 
 
-	Dev_server_http_server(Dev_server server) {
+	Dev_servlet_server(Dev_server server) {
 		this.server = server;
 	}
 
@@ -33,10 +33,10 @@ class Dev_server_http_server {
 			context.setContextPath("/");
 			http_server.setHandler(context);
 
-			ServletHolder holder_events = new ServletHolder("ws-events", Dev_server_websocket_servlet.class);
+			ServletHolder holder_events = new ServletHolder("ws-events", Dev_websocket_servlet.class);
 			context.addServlet(holder_events, "/events/*");
 
-			ServletHolder holder_html = new ServletHolder("html", Dev_server_html_servlet.class);
+			ServletHolder holder_html = new ServletHolder("html", Dev_web_servlet.class);
 			context.addServlet(holder_html, "/*");
 
 			context.setAttribute("dev_server", server);

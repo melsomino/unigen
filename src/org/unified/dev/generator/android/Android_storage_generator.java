@@ -27,7 +27,7 @@ public class Android_storage_generator extends Generator {
 	@Override
 	public void generate() throws Exception {
 		Android_storage_types java = new Android_storage_types();
-		Template_engine templates = new Template_engine("java", Android_storage_generator.class, "templates/android/storage");
+		Template_engine templates = new Template_engine("java", Android_storage_generator.class, "web/android/storage");
 		templates.shared_header = "" +
 			"import java.io.*;\n" +
 			"import org.unified.module.storage.*;";
