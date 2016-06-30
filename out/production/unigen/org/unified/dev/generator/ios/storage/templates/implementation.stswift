@@ -1,6 +1,6 @@
 ~+header~
 
-public class Default~=storage.module~Storage: ~=storage.module~Storage {
+public class Default~=storage.module~Storage: ~=storage.module~Storage, ApplicationStorageDependent {
 
 
 	// MARK: - Component
@@ -8,7 +8,7 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage {
 
 	public var dependency: DependencyResolver! {
 		didSet {
-			storage = dependency.applicationStorage.getModuleStorage("~=storage.module~")
+			storage = applicationStorage.getModuleStorage("~=storage.module~")
 			try! storage.initializeDatabase(DefaultDatabaseMaintenance())
 		}
 	}
