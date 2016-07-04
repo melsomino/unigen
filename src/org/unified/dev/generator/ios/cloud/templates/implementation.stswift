@@ -39,8 +39,8 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi {
 ~	else { ~
 		try cloudConnector.invokeService(cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
 ~	} ~
-~ } ~
 	}
+~ } ~
 
 
 
