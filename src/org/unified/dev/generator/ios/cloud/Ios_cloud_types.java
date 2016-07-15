@@ -18,7 +18,7 @@ public class Ios_cloud_types {
 			return "String";
 		}
 		if (type == Cloud_primitive_type.uuid_type) {
-			return "UUID";
+			return "Uuid";
 		}
 		if (type == Cloud_primitive_type.int64_type) {
 			return "Long";

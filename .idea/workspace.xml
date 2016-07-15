@@ -7,11 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30d3a574-a489-46bb-8e71-4d23f32bacbc" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/net_openhft_compiler_Release.xml" afterPath="$PROJECT_DIR$/.idea/libraries/net_openhft_compiler_Release.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/templates/header.stswift" afterPath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/templates/header.stswift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/header.stswift" afterPath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/header.stswift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/unified/dev/server/web/index.html" afterPath="$PROJECT_DIR$/src/org/unified/dev/server/web/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/Ios_cloud_types.java" afterPath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/Ios_cloud_types.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/Ios_storage_types.java" afterPath="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/Ios_storage_types.java" />
     </list>
     <ignored path="mut.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -33,26 +30,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="interface.stswift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/interface.stswift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="implementation.stswift" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/implementation.stswift">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="implementation_query.stswift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/implementation_query.stswift">
           <provider selected="true" editor-type-id="text-editor">
@@ -115,11 +92,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="header.stswift" pinned="false" current-in-tab="true">
+      <file leaf-file-name="header.stswift" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/header.stswift">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="162">
               <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Ios_cloud_types.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/Ios_cloud_types.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Ios_storage_types.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/Ios_storage_types.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="126">
+              <caret line="7" column="60" selection-start-line="7" selection-start-column="60" selection-end-line="7" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -157,8 +154,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/org/unified/dev/server/Dev_server_http.java" />
-        <option value="$PROJECT_DIR$/src/org/unified/dev/server/Mac_os_watcher.java" />
         <option value="$PROJECT_DIR$/src/org/unified/dev/server/Dev_connection.java" />
         <option value="$PROJECT_DIR$/src/org/unified/dev/server/Dev_server_websocket_connection.java" />
         <option value="$PROJECT_DIR$/src/org/unified/dev/server/Dev_events_servlet.java" />
@@ -208,6 +203,8 @@
         <option value="$PROJECT_DIR$/src/org/unified/dev/server/web/index.html" />
         <option value="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/templates/header.stswift" />
         <option value="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/templates/header.stswift" />
+        <option value="$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/Ios_cloud_types.java" />
+        <option value="$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/Ios_storage_types.java" />
       </list>
     </option>
   </component>
@@ -1075,14 +1072,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/org/unified/module/storage/Field_summary.java" />
-    <entry file="file://$PROJECT_DIR$/src/org/unified/module/storage/Record_type.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/org/unified/module/storage/Storage.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -1454,6 +1443,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/cloud/Ios_cloud_types.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="20" column="36" selection-start-line="20" selection-start-column="36" selection-end-line="20" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/unified/dev/generator/ios/storage/Ios_storage_types.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="60" selection-start-line="7" selection-start-column="60" selection-end-line="7" selection-end-column="60" />
           <folding />
         </state>
       </provider>

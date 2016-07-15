@@ -9,7 +9,7 @@ public class Ios_storage_types
 	{
 		switch (field_type) {
 			case Uuid:
-				return "UUID";
+				return "Uuid";
 			case String:
 				return "String";
 			case Integer:
