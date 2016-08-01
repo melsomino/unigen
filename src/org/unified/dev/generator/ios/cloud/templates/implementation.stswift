@@ -1,14 +1,11 @@
 ~+ header~
 
-public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi {
+public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudConnectorDependent {
 
 	// MARK: - Component
 
 
 	public var dependency: DependencyResolver!
-	private var cloudConnector: CloudConnector {
-		return dependency.cloudConnector
-	}
 
 
 	// MARK: - Methods
