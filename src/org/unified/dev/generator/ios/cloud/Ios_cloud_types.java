@@ -21,7 +21,7 @@ public class Ios_cloud_types {
 			return "Uuid";
 		}
 		if (type == Cloud_primitive_type.int64_type) {
-			return "Long";
+			return "Int64";
 		}
 		if (type == Cloud_primitive_type.date_time_type) {
 			return "NSDate";
@@ -32,12 +32,13 @@ public class Ios_cloud_types {
 
 	public String field_type_declaration(Cloud_type_declaration declaration) throws Unified_error {
 		String declaration_string = interface_declaration(declaration);
-		return declaration.modifier.is_array() ? declaration_string + "()" : declaration_string;
+		return declaration.modifier.is_array() ? " = " + declaration_string + "()" : ": " + declaration_string;
 	}
 
 
 	public String param_type_declaration(Cloud_type_declaration declaration) throws Unified_error {
-		return field_type_declaration(declaration);
+		String declaration_string = interface_declaration(declaration);
+		return declaration.modifier.is_array() ? declaration_string + "()" : declaration_string;
 	}
 
 

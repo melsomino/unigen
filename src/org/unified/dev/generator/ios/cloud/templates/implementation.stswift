@@ -55,7 +55,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 ~ for (Cloud_struct_type struct_type : api.struct_types) { ~
 	public class ~= struct_type.implementation_name ~: ~= struct_type.interface_name ~ {
 ~ 	for(Cloud_struct_field field: struct_type.fields) { ~
-		public var ~= field.identifier ~: ~= swift.field_type_declaration(field.declaration) ~
+		public var ~= field.identifier ~~= swift.field_type_declaration(field.declaration) ~
 ~ 	} ~
 
 		public static var converter = Converter() as CloudApiStructConverter<~= struct_type.interface_name ~>
@@ -65,8 +65,8 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 ~	int index = 0; ~
 ~ 	for(Cloud_struct_field field: struct_type.fields) { ~
 					CloudApiFieldConverter<~= struct_type.interface_name ~>(~= swift.quoted(field.name) ~, ~= swift.quoted(field.declaration.type.get_record_schema_name()) ~,
-						{ $0.~= field.identifier ~ = ~= field.declaration.get_from_json_conversion_method_name() ~($1) },
-						{ ~= field.declaration.get_to_json_conversion_method_name() ~($0.~= field.identifier ~) })~= index < struct_type.fields.length - 1 ? ", " : "" ~
+						{ object, source in object.~= field.identifier ~ = ~= field.declaration.get_from_json_conversion_method_name() ~(source) },
+						{ object in ~= field.declaration.get_to_json_conversion_method_name() ~(object.~= field.identifier ~) })~= index < struct_type.fields.length - 1 ? ", " : "" ~
 ~ 		++index; ~
 ~ 	} ~
 				]);

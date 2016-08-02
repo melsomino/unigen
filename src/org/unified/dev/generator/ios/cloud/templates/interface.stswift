@@ -19,7 +19,7 @@ public protocol ~= module.name ~CloudApi: Dependent {
 ~ for (Cloud_struct_type struct : api.struct_types) { ~
 public protocol ~= struct.interface_name ~: AnyObject {
 ~ for(Cloud_struct_field field: struct.fields) { ~
-	var ~= field.identifier ~: ~= swift.field_type_declaration(field.declaration) ~ { get set }
+	var ~= field.identifier ~: ~= swift.interface_declaration(field.declaration) ~ { get set }
 ~ } ~
 }
 
