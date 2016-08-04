@@ -53,6 +53,37 @@ public abstract class Generator {
 
 
 
+	public static String normalize_identifier(String original) {
+		if (original == null || original.length() == 0) {
+			return original;
+		}
+		int non_lowercase_index = 0;
+		while (non_lowercase_index < original.length() && Character.isAlphabetic(original.charAt(non_lowercase_index)) && Character.isUpperCase(original.charAt(non_lowercase_index))) {
+			++non_lowercase_index;
+		}
+		if (non_lowercase_index > 0) {
+			if (non_lowercase_index < original.length()) {
+				original = original.substring(0, non_lowercase_index).toLowerCase() + original.substring(non_lowercase_index);
+			}
+			else {
+				original = original.toLowerCase();
+			}
+		}
+		StringBuilder normalized = new StringBuilder(original.length());
+		for (int i = 0; i < original.length(); ++i) {
+			char c = original.charAt(i);
+			if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '_') {
+				normalized.append(c);
+			}
+			else {
+				normalized.append('_');
+			}
+		}
+		return normalized.toString();
+	}
+
+
+
 
 
 	private static void deleteFolderContent(Path folder) throws IOException {

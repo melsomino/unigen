@@ -55,7 +55,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 ~ for (Cloud_struct_type struct_type : api.struct_types) { ~
 	public class ~= struct_type.implementation_name ~: ~= struct_type.interface_name ~ {
 ~ 	for(Cloud_struct_field field: struct_type.fields) { ~
-		public var ~= field.identifier ~~= swift.field_type_declaration(field.declaration) ~
+		public var ~= field.identifier ~~= swift.implementation_field_type_declaration(field.declaration) ~
 ~ 	} ~
 
 		public static var converter = Converter() as CloudApiStructConverter<~= struct_type.interface_name ~>

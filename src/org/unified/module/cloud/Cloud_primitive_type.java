@@ -24,12 +24,14 @@ public class Cloud_primitive_type implements Cloud_type {
 
 	@Override
 	public String get_to_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
-		return "CloudApiPrimitiveTypeConverter.jsonFrom" + Generator.uppercase_first_letter(conversation_method_root);
+		String m = modifier == Cloud_type_modifier.Array ? "Array" : "";
+		return "CloudApiPrimitiveTypeConverter.json" + m + "From" + Generator.uppercase_first_letter(conversation_method_root) + m;
 	}
 
 	@Override
 	public String get_from_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
-		return "CloudApiPrimitiveTypeConverter." + Generator.lowercase_first_letter(conversation_method_root) + "FromJson";
+		String m = modifier == Cloud_type_modifier.Array ? "Array" : "";
+		return "CloudApiPrimitiveTypeConverter." + Generator.lowercase_first_letter(conversation_method_root) + m + "FromJson" + m;
 	}
 
 	public final static Cloud_primitive_type integer_type = new Cloud_primitive_type("integer", "Число целое", "integer");

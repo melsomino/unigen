@@ -18,16 +18,7 @@ public class Compound_name {
 		if (specified_identifier != null) {
 			identifier = specified_identifier;
 		} else {
-			switch (identifierStyle) {
-				case Camel:
-					identifier = Generator.lowercase_first_letter(name);
-					break;
-				case Pascal:
-					identifier = Generator.uppercase_first_letter(name);
-					break;
-				default:
-					identifier = name;
-			}
+			identifier = identifierStyle == Identifier_style.Pascal ? Generator.uppercase_first_letter(Generator.normalize_identifier(name)) : Generator.normalize_identifier(name);
 		}
 	}
 
