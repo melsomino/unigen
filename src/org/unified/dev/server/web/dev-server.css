@@ -1,0 +1,100 @@
+body {
+	margin: 0;
+	background: ivory;
+}
+
+.header {
+	margin: 0;
+	padding: 0;
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 24pt;
+	color: white;
+	background-color: darkorange;
+}
+
+td.header-title {
+	padding: 8pt 18pt 8pt 18pt;
+	background: orange;
+}
+
+td.header-file {
+	font-size: 12pt;
+	padding: 8pt 18pt 8pt 18pt;
+}
+
+.section-title {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 18pt;
+	padding-bottom: 12pt;
+	color: orange;
+}
+.source-name {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 18pt;
+	color: gray;
+}
+.source-path {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 8pt;
+	padding-top: 2pt;
+	padding-bottom: 2pt;
+	color: silver;
+}
+.source-status-ok {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 12pt;
+	color: mediumseagreen;
+}
+.source-status-failed {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 12pt;
+	color: tomato;
+}
+.source-status-info {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 12pt;
+	color: CornflowerBlue;
+}
+.source-status-details {
+	border-radius: 3pt;
+	margin-top: 4pt;
+	padding: 4pt;
+	font-size: 10pt;
+	color: brown;
+	background: pink;
+}
+.source-status-time {
+	font-family: Helvetica Neue, Helvetica;
+	font-size: 11pt;
+	color: lightgrey;
+}
+table.sections {
+}
+table.sections td {
+	border-left: 3pt solid BlanchedAlmond;
+	padding-left: 16pt;
+	padding-right: 16pt;
+}
+
+table.sections td.first {
+	border-left: none;
+	padding-left: 0;
+}
+
+div.content {
+	padding: 18pt;
+}
+
+#log {
+	font-family: courier;
+	font-size: 8pt;
+	color: gray;
+	height: 100pt;
+	overflow: auto;
+	padding: 8pt;
+	height: 100pt;
+	background: whitesmoke;
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+}
