@@ -2,9 +2,6 @@
 //    THIS FILE WAS GENERATED WITH "UNIGEN"
 //    DO NOT EDIT CODE MANUALLY
 //
-//    Source: ~=generation_source~
-//    Time: ~=generation_time.toString()~
-//
 
 import Foundation
 import Unified
