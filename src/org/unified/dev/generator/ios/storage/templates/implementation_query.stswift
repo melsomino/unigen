@@ -69,7 +69,7 @@ switch (query.returns) {
 ~
 		break;
 	default: ~
-			return sequence.generate().next()
+			return sequence.makeIterator().next()
 ~
 		break;
 }

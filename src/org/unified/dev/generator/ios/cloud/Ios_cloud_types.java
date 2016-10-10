@@ -24,7 +24,7 @@ public class Ios_cloud_types {
 			return "Int64";
 		}
 		if (type == Cloud_primitive_type.date_time_type) {
-			return "NSDate";
+			return "Date";
 		}
 		throw new Unified_error("Can not determine iOS native type for primitive type: " + type.record_schema_name);
 	}
@@ -49,7 +49,7 @@ public class Ios_cloud_types {
 
 	public String interface_declaration(Cloud_type_declaration declaration) throws Unified_error {
 		String interface_type_name = get_interface_type_name(declaration);
-		return declaration.modifier.is_array() ? "[" + interface_type_name + "]" : interface_type_name + "?";
+		return declaration.modifier.is_array() ? "[" + interface_type_name + "?]" : interface_type_name + "?";
 	}
 
 
