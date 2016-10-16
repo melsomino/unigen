@@ -15,7 +15,7 @@ public class Ios_storage_types
 			case Integer:
 				return "Int";
 			case Date_time:
-				return "NSDate";
+				return "Date";
 			case Boolean:
 				return "Bool";
 		}
