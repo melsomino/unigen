@@ -13,28 +13,31 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 
 ~ for (Cloud_method method : api.methods) { ~
 	public ~+ method_header~ {
+		let methodUrl = cloudConnector.makeUrl(~= swift.quoted(method.url) ~)
 ~	if (method.params != null && method.params.is_struct_type()) { ~
 		let params = ~= swift.struct_implementation_creation(method.params) ~
 ~		for (Cloud_struct_field param : method.params.struct_type().fields) { ~
 		params.~= param.identifier ~ = ~= param.identifier ~
 ~		} ~
 ~	} ~
+~	if (method.params != null) { ~
+		let paramsJson = ~= method.params.get_to_json_conversion_method_name() ~(params)
+~	} ~
 ~	if (method.params != null && method.result != null) { ~
-		return ~= method.result.get_from_json_conversion_method_name() ~(try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~,
-				~= method.params.get_to_json_conversion_method_name() ~(params)));
+		let resultJson = try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, paramsJson)
+		let result = ~= method.result.get_from_json_conversion_method_name()~(resultJson)
+		return result
 ~	} ~
 ~	else if (method.params != null) { ~
-		try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~,
-				~= method.params.get_to_json_conversion_method_name() ~(params));
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, paramsJson);
 ~	} ~
 ~	else if (method.result != null) { ~
-		return ~= method.result.get_from_json_conversion_method_name() ~(try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil));
+		let resultJson = try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil)
+		let result = ~= method.result.get_from_json_conversion_method_name()~(resultJson)
+		return result
 ~	} ~
 ~	else { ~
-		try cloudConnector.invokeService(cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
 ~	} ~
 	}
 ~ } ~
@@ -44,7 +47,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 	// MARK: - Types
 
 ~ for (Cloud_struct_type struct_type : api.struct_types) { ~
-~	if (struct_type.used_in_method_params) { ~
+~	if (!struct_type.used_in_method_params) { ~
 	public func create~= struct_type.implementation_name ~() -> ~= struct_type.interface_name ~ {
 		return ~= struct_type.implementation_name ~()
 	}
@@ -53,6 +56,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 
 
 ~ for (Cloud_struct_type struct_type : api.struct_types) { ~
+~	if (!struct_type.used_in_method_params) { ~
 	public class ~= struct_type.implementation_name ~: ~= struct_type.interface_name ~ {
 ~ 	for(Cloud_struct_field field: struct_type.fields) { ~
 		public var ~= field.identifier ~~= swift.implementation_field_type_declaration(field.declaration) ~
@@ -78,5 +82,6 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 
 
 
+~	} ~
 ~ } ~
 }

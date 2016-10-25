@@ -34,7 +34,7 @@ public class Dev_configuration {
 
 
 
-	Source find_source_with_path(Path path) {
+	public Source find_source_with_path(Path path) {
 		for (Source source : sources) {
 			if (source.path.equals(path)) {
 				return source;
