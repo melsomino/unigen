@@ -11,11 +11,10 @@ public protocol ~= module.name ~CloudApi: Dependent {
 
 
 
-~ for (Cloud_struct_type struct : api.struct_types) { 
-	if (!struct.used_in_method_params) { ~
+~ for (Cloud_struct_type struct : api.struct_types) { ~
 public class ~= struct.interface_name ~ {
 ~ for(Cloud_struct_field field: struct.fields) { ~
-	var ~= field.identifier ~~= swift.interface_field_type_declaration(field.declaration) ~
+	public final var ~= field.identifier ~~= swift.implementation_field_type_declaration(field.declaration) ~
 ~ } ~
 }
 
@@ -23,7 +22,5 @@ public class ~= struct.interface_name ~ {
 
 
 
-~ 
-	}
-} ~
+~ } ~
 
