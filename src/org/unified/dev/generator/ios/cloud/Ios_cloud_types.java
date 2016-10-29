@@ -4,6 +4,7 @@ import org.unified.Unified_error;
 import org.unified.module.cloud.Cloud_primitive_type;
 import org.unified.module.cloud.Cloud_type_declaration;
 
+@SuppressWarnings("WeakerAccess")
 public class Ios_cloud_types {
 
 
