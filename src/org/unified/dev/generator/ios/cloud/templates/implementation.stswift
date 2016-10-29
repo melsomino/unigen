@@ -13,70 +13,50 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 
 ~ for (Cloud_method method : api.methods) { ~
 	public ~+ method_header~ {
-~	if (method.params != null && method.params.is_struct_type()) { ~
-		let params = ~= swift.struct_implementation_creation(method.params) ~
-~		for (Cloud_struct_field param : method.params.struct_type().fields) { ~
-		params.~= param.identifier ~ = ~= param.identifier ~
-~		} ~
-~	} ~
+		let methodUrl = cloudConnector.makeUrl(~= swift.quoted(method.url) ~)
+~= swift.method_params_assignment(method)~
 ~	if (method.params != null && method.result != null) { ~
-		return ~= method.result.get_from_json_conversion_method_name() ~(try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~,
-				~= method.params.get_to_json_conversion_method_name() ~(params)));
+		let resultJson = try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params)
+		let result = ~= swift.method_result_decoder(method.result, "resultJson")~
+		return result
 ~	} ~
 ~	else if (method.params != null) { ~
-		try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~,
-				~= method.params.get_to_json_conversion_method_name() ~(params));
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params);
 ~	} ~
 ~	else if (method.result != null) { ~
-		return ~= method.result.get_from_json_conversion_method_name() ~(try cloudConnector.invokeService(
-			cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil));
+		let resultJson = try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params)
+		let result = ~= swift.method_result_decoder(method.result, "resultJson")~
+		return result
 ~	} ~
 ~	else { ~
-		try cloudConnector.invokeService(cloudConnector.makeUrl(~= swift.quoted(method.url) ~), ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
 ~	} ~
 	}
-~ } ~
-
-
-
-	// MARK: - Types
-
-~ for (Cloud_struct_type struct_type : api.struct_types) { ~
-~	if (struct_type.used_in_method_params) { ~
-	public func create~= struct_type.implementation_name ~() -> ~= struct_type.interface_name ~ {
-		return ~= struct_type.implementation_name ~()
-	}
-~	} ~
-~ } ~
-
-
-~ for (Cloud_struct_type struct_type : api.struct_types) { ~
-	public class ~= struct_type.implementation_name ~: ~= struct_type.interface_name ~ {
-~ 	for(Cloud_struct_field field: struct_type.fields) { ~
-		public var ~= field.identifier ~~= swift.implementation_field_type_declaration(field.declaration) ~
-~ 	} ~
-
-		public static var converter = Converter() as CloudApiStructConverter<~= struct_type.interface_name ~>
-		private class Converter: CloudApiStructConverter<~= struct_type.interface_name ~> {
-			init() {
-				super.init( { ~= struct_type.implementation_name ~() as ~= struct_type.interface_name ~ }, [
-~	int index = 0; ~
-~ 	for(Cloud_struct_field field: struct_type.fields) { ~
-					CloudApiFieldConverter<~= struct_type.interface_name ~>(~= swift.quoted(field.name) ~, ~= swift.quoted(field.declaration.type.get_record_schema_name()) ~,
-						{ object, source in object.~= field.identifier ~ = ~= field.declaration.get_from_json_conversion_method_name() ~(source) },
-						{ object in ~= field.declaration.get_to_json_conversion_method_name() ~(object.~= field.identifier ~) })~= index < struct_type.fields.length - 1 ? ", " : "" ~
-~ 		++index; ~
-~ 	} ~
-				]);
-			}
-		}
-	}
-
-
 
 
 
 ~ } ~
+
+
 }
+
+
+// MARK: - Types
+
+~ for (Cloud_struct_type struct_type : api.struct_types) { 
+	String name = org.unified.dev.generator.Generator.lowercase_first_letter(struct_type.implementation_name); ~
+
+fileprivate extension ~=struct_type.interface_name~ {
+	fileprivate static let typeConverter = SbisType<~=struct_type.interface_name~> (
+		fields: ~= swift.struct_type_fields(struct_type)~, 
+		decode: { values in
+			let result = ~= struct_type.interface_name ~()
+~= swift.struct_type_decoder(struct_type)~
+			return result
+		}
+	)
+
+}
+~ } ~
+
+

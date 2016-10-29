@@ -9,7 +9,7 @@ public class Cloud_primitive_type implements Cloud_type {
 
 	public final String name;
 	public final String record_schema_name;
-	final String conversation_method_root;
+	public final String conversation_method_root;
 
 	private Cloud_primitive_type(String name, String record_schema_name, String conversation_method_root) {
 		this.name = name;
@@ -25,13 +25,13 @@ public class Cloud_primitive_type implements Cloud_type {
 	@Override
 	public String get_to_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
 		String m = modifier == Cloud_type_modifier.Array ? "Array" : "";
-		return "CloudApiPrimitiveTypeConverter.json" + m + "From" + Generator.uppercase_first_letter(conversation_method_root) + m;
+		return "JsonEncoder." + conversation_method_root + m + "(";
 	}
 
 	@Override
 	public String get_from_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
 		String m = modifier == Cloud_type_modifier.Array ? "Array" : "";
-		return "CloudApiPrimitiveTypeConverter." + Generator.lowercase_first_letter(conversation_method_root) + m + "FromJson" + m;
+		return "JsonDecoder." + conversation_method_root + m + "(";
 	}
 
 	public final static Cloud_primitive_type integer_type = new Cloud_primitive_type("integer", "Число целое", "integer");
