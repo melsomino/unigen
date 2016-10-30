@@ -245,14 +245,14 @@ public class Ios_cloud_types {
 	private void encode_sbis_record_param_value(String source, Cloud_type_declaration declaration, CodeBuilder code) throws Unified_error {
 		code.end_line("[");
 		code.indent();
-		code.line("[\"s\": [");
+		code.line("\"s\": [");
 		code.indent();
 		for (Cloud_struct_field field : declaration.struct_type().fields) {
 			code.line("[\"n\": \"", field.name, "\", \"t\": \"", field.declaration.record_schema_name(), "\"],");
 		}
 		code.unindent();
-		code.line("]],");
-		code.line("[\"d\": [");
+		code.line("],");
+		code.line("\"d\": [");
 		code.indent();
 		for (Cloud_struct_field field : declaration.struct_type().fields) {
 			code.start_line("");
@@ -260,7 +260,7 @@ public class Ios_cloud_types {
 			code.end_line(",");
 		}
 		code.unindent();
-		code.line("]]");
+		code.line("]");
 		code.unindent();
 		code.start_line("]");
 	}
@@ -273,9 +273,11 @@ public class Ios_cloud_types {
 		if (declaration.value != null) {
 			if (declaration.value.equals("null")) {
 				code.text("NSNull()");
-			} else if (declaration.primitive_type() == Cloud_primitive_type.text_type) {
+			}
+			else if (declaration.primitive_type() == Cloud_primitive_type.text_type) {
 				code.text(quoted(declaration.value));
-			} else {
+			}
+			else {
 				code.text(declaration.value);
 			}
 			return;
@@ -288,7 +290,8 @@ public class Ios_cloud_types {
 
 		if (declaration.modifier == Cloud_type_modifier.Record) {
 			encode_sbis_record_param_value(source, declaration, code);
-		} else {
+		}
+		else {
 			encode_json_object_param_value(source, declaration, code);
 		}
 	}
@@ -337,7 +340,12 @@ public class Ios_cloud_types {
 		switch (declaration.modifier) {
 			case Missing:
 			case Object:
-				code.append("jsonObject");
+				if (declaration.encoding == Cloud_type_encoding.JsonString) {
+					code.append("stringWithJsonObject");
+				}
+				else {
+					code.append("jsonObject");
+				}
 				break;
 			case Record:
 				code.append("sbisRecord");
@@ -359,6 +367,9 @@ public class Ios_cloud_types {
 	}
 
 
+
+
+
 	private StringBuilder append_declaration_decoder(Cloud_type_declaration declaration, int index, StringBuilder code) {
 		return append_declaration_decoder(declaration, "values", "values", Integer.toString(index), code);
 	}
@@ -378,6 +389,7 @@ public class Ios_cloud_types {
 		}
 		return code.toString();
 	}
+
 
 
 

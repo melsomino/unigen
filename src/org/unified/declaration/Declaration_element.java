@@ -49,7 +49,7 @@ public class Declaration_element {
 			String file_content = new String(Files.readAllBytes(file_path), Charset.forName("UTF-8"));
 			return parse(file_content);
 		} catch (IOException e) {
-			throw new Declaration_error(null, "Can not load_from declarations from file: " + file_path.toAbsolutePath(), e);
+			throw new Declaration_error(null, "Can not load declarations from file: " + file_path.toAbsolutePath(), e);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class Declaration_element {
 	public static Declaration_element[] parse(String source) throws Declaration_error {
 		Parser parser = new Parser(source, "", Parser.Whitespaces.Not_pass);
 		parser.whitespace_test = Parser::is_whitespace;
-		return parseElements(parser, 0);
+		return parse_elements(parser, 0);
 	}
 
 
@@ -105,12 +105,12 @@ public class Declaration_element {
 
 
 
-	private static Declaration_element[] parseElements(Parser parser, int elementIndent) throws Declaration_error {
+	private static Declaration_element[] parse_elements(Parser parser, int elementIndent) throws Declaration_error {
 		List<Declaration_element> elements = new ArrayList<>();
-		Declaration_element element = parseElement(parser, elementIndent);
+		Declaration_element element = parse_element(parser, elementIndent);
 		while (element != null) {
 			elements.add(element);
-			element = parseElement(parser, elementIndent);
+			element = parse_element(parser, elementIndent);
 		}
 		return elements.toArray(new Declaration_element[elements.size()]);
 	}
@@ -119,7 +119,7 @@ public class Declaration_element {
 
 
 
-	private static Declaration_element parseElement(Parser parser, int elementIndent) throws Declaration_error {
+	private static Declaration_element parse_element(Parser parser, int elementIndent) throws Declaration_error {
 		if (parser.eof()) {
 			return null;
 		}
@@ -131,7 +131,7 @@ public class Declaration_element {
 		}
 
 		Declaration_attribute[] attributes = parse_attributes(parser, elementIndent);
-		Declaration_element[] children = parseElements(parser, elementIndent + 1);
+		Declaration_element[] children = parse_elements(parser, elementIndent + 1);
 
 		return new Declaration_element(attributes, children);
 	}
