@@ -31,8 +31,16 @@ public class Cloud_type_declaration {
 
 
 
-	boolean is_primitive_type() {
+	public boolean is_primitive_type() {
 		return type != null && type instanceof Cloud_primitive_type;
+	}
+
+
+
+
+
+	public boolean is_raw_type() {
+		return type != null && type == Cloud_primitive_type.raw_type;
 	}
 
 

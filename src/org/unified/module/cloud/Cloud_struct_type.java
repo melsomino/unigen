@@ -9,11 +9,6 @@ public class Cloud_struct_type implements Cloud_type {
 
 	public final Cloud_struct_field[] fields;
 
-	public boolean map_decoder_required = false;
-	public boolean record_decoder_required = false;
-	public boolean recordset_decoder_required = false;
-	public boolean array_decoder_required = false;
-
 	public Cloud_struct_type(String module_name, String name, Cloud_struct_field[] fields) {
 		this.interface_name = module_name + "CloudApi" + name;
 		this.implementation_name = name;

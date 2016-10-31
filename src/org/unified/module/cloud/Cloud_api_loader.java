@@ -22,7 +22,6 @@ public class Cloud_api_loader {
 		Module_loader.enum_default_items(cloud_element, "+types", (type_declaration) -> {
 			String type_name = type_declaration.name();
 			Cloud_type_declaration struct_type = load_type_declaration(type_declaration, module_name, type_name, true, struct_types_by_name);
-			struct_types_by_name.put(type_name, struct_type);
 		});
 
 		Cloud_method[] methods = Module_loader.load_default_items(cloud_element, null, Cloud_method[]::new,
@@ -31,24 +30,7 @@ public class Cloud_api_loader {
 		Cloud_struct_type[] struct_types = new Cloud_struct_type[struct_types_by_name.size()];
 		int index = 0;
 		for (Cloud_type_declaration declaration : struct_types_by_name.values()) {
-			Cloud_struct_type struct_type = declaration.struct_type();
-			switch (declaration.modifier) {
-				case Array:
-					struct_type.map_decoder_required = true;
-					struct_type.array_decoder_required = true;
-					break;
-				case Object:
-					struct_type.map_decoder_required = true;
-					break;
-				case Record:
-					struct_type.record_decoder_required = true;
-					break;
-				case Recordset:
-					struct_type.record_decoder_required = true;
-					struct_type.recordset_decoder_required = true;
-					break;
-			}
-			struct_types[index++] = struct_type;
+			struct_types[index++] = declaration.struct_type();
 		}
 		return new Cloud_api(struct_types, methods);
 	}

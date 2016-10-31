@@ -46,8 +46,8 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 ~ for (Cloud_struct_type struct_type : api.struct_types) { 
 	String name = org.unified.dev.generator.Generator.lowercase_first_letter(struct_type.implementation_name); ~
 
-fileprivate extension ~=struct_type.interface_name~ {
-	fileprivate static let typeConverter = SbisType<~=struct_type.interface_name~> (
+extension ~=struct_type.interface_name~ {
+	public static let typeConverter = SbisType<~=struct_type.interface_name~> (
 		fields: ~= swift.struct_type_fields(struct_type)~, 
 		decode: { values in
 			let result = ~= struct_type.interface_name ~()

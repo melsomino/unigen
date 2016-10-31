@@ -11,16 +11,28 @@ public class Cloud_primitive_type implements Cloud_type {
 	public final String record_schema_name;
 	public final String conversation_method_root;
 
+
+
 	private Cloud_primitive_type(String name, String record_schema_name, String conversation_method_root) {
 		this.name = name;
 		this.record_schema_name = record_schema_name;
 		this.conversation_method_root = conversation_method_root;
 	}
 
+
+
+	public boolean is_raw() {
+		return this == raw_type;
+	}
+
+
+
 	@Override
 	public String get_record_schema_name() {
 		return record_schema_name;
 	}
+
+
 
 	@Override
 	public String get_to_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
@@ -28,11 +40,15 @@ public class Cloud_primitive_type implements Cloud_type {
 		return "JsonEncoder." + conversation_method_root + m + "(";
 	}
 
+
+
 	@Override
 	public String get_from_json_conversion_method_name(Cloud_type_modifier modifier, Cloud_type_encoding encoding) {
 		String m = modifier == Cloud_type_modifier.Array ? "Array" : "";
 		return "JsonDecoder." + conversation_method_root + m + "(";
 	}
+
+
 
 	public final static Cloud_primitive_type integer_type = new Cloud_primitive_type("integer", "Число целое", "integer");
 	public final static Cloud_primitive_type int64_type = new Cloud_primitive_type("int64", "Число целое", "int64");
@@ -40,6 +56,8 @@ public class Cloud_primitive_type implements Cloud_type {
 	public final static Cloud_primitive_type text_type = new Cloud_primitive_type("string", "Строка", "string");
 	public final static Cloud_primitive_type date_time_type = new Cloud_primitive_type("date-time", "Дата и время", "dateTime");
 	public final static Cloud_primitive_type uuid_type = new Cloud_primitive_type("uuid", "UUID", "uuid");
+	public final static Cloud_primitive_type raw_type = new Cloud_primitive_type("raw", "Объект", null);
+
 
 
 	public static Cloud_primitive_type try_parse(String string) {
@@ -55,9 +73,12 @@ public class Cloud_primitive_type implements Cloud_type {
 			typeByName.put("date", date_time_type);
 			typeByName.put("date-time", date_time_type);
 			typeByName.put("uuid", uuid_type);
+			typeByName.put("raw", raw_type);
 		}
 		return typeByName.get(string.toLowerCase());
 	}
+
+
 
 	private static Map<String, Cloud_primitive_type> typeByName;
 }

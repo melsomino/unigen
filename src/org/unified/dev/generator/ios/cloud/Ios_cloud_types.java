@@ -30,6 +30,9 @@ public class Ios_cloud_types {
 		if (type == Cloud_primitive_type.date_time_type) {
 			return "Date";
 		}
+		if (type == Cloud_primitive_type.raw_type) {
+			return "Any";
+		}
 		throw new Unified_error("Can not determine iOS native type for primitive type: " + type.record_schema_name);
 	}
 
@@ -329,6 +332,12 @@ public class Ios_cloud_types {
 	private StringBuilder append_declaration_decoder(Cloud_type_declaration declaration, String primitive_decoder, String struct_decoder, String source, StringBuilder code) {
 		if (!declaration.is_struct_type()) {
 			Cloud_primitive_type primitive_type = declaration.primitive_type();
+			if (primitive_type == Cloud_primitive_type.raw_type) {
+				if (primitive_decoder.equals(struct_decoder)) {
+					return code.append(primitive_decoder).append("[").append(source).append("]");
+				}
+				return code.append(source);
+			}
 			code.append(primitive_decoder).append(".").append(primitive_type.conversation_method_root);
 			if (declaration.modifier == Cloud_type_modifier.Array) {
 				code.append("Array");
@@ -361,7 +370,6 @@ public class Ios_cloud_types {
 				break;
 		}
 		Cloud_struct_type struct_type = declaration.struct_type();
-		String name = Generator.lowercase_first_letter(struct_type.implementation_name);
 		code.append("(").append(source).append(", type: ").append(struct_type.interface_name).append(".typeConverter)");
 		return code;
 	}
