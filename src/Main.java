@@ -1,14 +1,31 @@
-import com.sun.tools.javac.util.Pair;
+import javafx.util.Pair;
 import org.unified.dev.generator.Module_generator;
 import org.unified.dev.server.Dev_server;
 import org.unified.module.Module;
 import org.unified.module.Module_loader;
 
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
 
 public class Main {
+	private static void add_jre_lib(String name) {
+		try {
+			String jre = System.getProperty("java.home");
+			URL url = new URL(Paths.get("file://" + jre).getParent().toString() + "/lib/" + name);
+			URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+			Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+			method.setAccessible(true);
+			method.invoke(classLoader, url);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+
 
 	private static Pair<String, String> parse_command_value(String arg) {
 		arg = arg.trim();
@@ -28,16 +45,13 @@ public class Main {
 
 
 
-
-
 	private static void generate_modules(Dev_server dev_server) {
 		Arrays.stream(dev_server.configuration.sources).filter(source -> source.is_module).forEach((source) -> {
 			try {
 				System.out.println("Generate: " + source.name);
 				Module module = Module_loader.load(source.path);
 				Module_generator.generate(module, source.ios_out, source.android_out);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		});
@@ -46,9 +60,8 @@ public class Main {
 
 
 
-
-
 	public static void main(String[] args) {
+		add_jre_lib("javafx-mx.jar");
 		try {
 			Dev_server dev_server = new Dev_server();
 			String configuration_file = null;
@@ -58,18 +71,15 @@ public class Main {
 
 			for (String source_arg : args) {
 				Pair<String, String> arg = parse_command_value(source_arg);
-				String command = arg.fst;
-				String value = arg.snd;
+				String command = arg.getKey();
+				String value = arg.getValue();
 				if (command == null) {
 					configuration_file = value;
-				}
-				else if (command.equals("dev_web_path")) {
+				} else if (command.equals("dev_web_path")) {
 					dev_web_path = value;
-				}
-				else if (command.equals("generate")) {
+				} else if (command.equals("generate")) {
 					generate = true;
-				}
-				else if (command.equals("run")) {
+				} else if (command.equals("run")) {
 					run = true;
 				}
 			}
@@ -85,8 +95,7 @@ public class Main {
 			if (run) {
 				dev_server.run();
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.flush();
 			e.printStackTrace();
 		}
