@@ -1,4 +1,0 @@
-func ~= method.identifier ~(~=swift.method_params_declaration(method)~) throws~
-if (method.result != null) {
-	~ -> ~= swift.interface_declaration(method.result)~~
-}~
