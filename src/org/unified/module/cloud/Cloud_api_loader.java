@@ -7,6 +7,7 @@ import org.unified.dev.generator.Generator;
 import org.unified.module.Compound_name;
 import org.unified.module.Module_loader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,15 +28,14 @@ public class Cloud_api_loader {
 		Cloud_method[] methods = Module_loader.load_default_items(cloud_element, null, Cloud_method[]::new,
 			(method_element) -> load_method_from(method_element, module_name, url, protocol, struct_types_by_name));
 
-		Cloud_struct_type[] struct_types = new Cloud_struct_type[struct_types_by_name.size()];
-		int index = 0;
-		for (Cloud_type_declaration declaration : struct_types_by_name.values()) {
-			struct_types[index++] = declaration.struct_type();
+		ArrayList<Cloud_struct_type> struct_types = new ArrayList<>();
+		for (Map.Entry<String, Cloud_type_declaration> declaration : struct_types_by_name.entrySet()) {
+			if (!declaration.getKey().startsWith("#")) {
+				struct_types.add(declaration.getValue().struct_type());
+			}
 		}
-		return new Cloud_api(struct_types, methods);
+		return new Cloud_api(struct_types.toArray(new Cloud_struct_type[struct_types.size()]), methods);
 	}
-
-
 
 
 
@@ -59,18 +59,21 @@ public class Cloud_api_loader {
 
 
 
-
-
 	private static Cloud_type_declaration load_type_declaration(Declaration_element element, String module_name, String struct_type_name, boolean is_public,
 		Map<String, Cloud_type_declaration> struct_types_by_name) throws Exception {
+
 		if (element == null) {
 			return null;
 		}
 
-		Declaration_summary summary = Declaration_summary.from(element);
+		Declaration_summary summary = Declaration_summary.from(element, struct_types_by_name);
 
 		if (summary.primitive_type != null) {
 			return new Cloud_type_declaration(summary.primitive_type, summary.modifier, Cloud_type_encoding.JsonValue, summary.value);
+		}
+
+		if (summary.struct_type != null) {
+			return new Cloud_type_declaration(summary.struct_type, summary.modifier, summary.encoding, summary.value);
 		}
 
 		Cloud_struct_field[] fields = Module_loader.load_default_items(element, null, Cloud_struct_field[]::new, (field_element) -> {
@@ -86,6 +89,7 @@ public class Cloud_api_loader {
 
 		if (is_public) {
 			struct_types_by_name.put(struct_type.interface_name, declaration);
+			struct_types_by_name.put("#" + struct_type.implementation_name, declaration);
 		}
 
 		return declaration;
@@ -93,33 +97,30 @@ public class Cloud_api_loader {
 
 
 
-
-
 	private static class Declaration_summary {
 		final Cloud_type_modifier modifier;
 		final Cloud_type_encoding encoding;
 		final Cloud_primitive_type primitive_type;
+		final Cloud_struct_type struct_type;
 		final String value;
 
 
 
-
-
-		Declaration_summary(Cloud_type_modifier modifier, Cloud_type_encoding encoding, Cloud_primitive_type primitive_type, String value) {
+		Declaration_summary(Cloud_type_modifier modifier, Cloud_type_encoding encoding, Cloud_primitive_type primitive_type, Cloud_struct_type struct_type, String value) {
 			this.modifier = modifier;
 			this.encoding = encoding;
 			this.primitive_type = primitive_type;
+			this.struct_type = struct_type;
 			this.value = value;
 		}
 
 
 
-
-
-		static Declaration_summary from(Declaration_element element) throws Declaration_error {
+		static Declaration_summary from(Declaration_element element, Map<String, Cloud_type_declaration> struct_types) throws Declaration_error {
 			Cloud_type_modifier modifier = Cloud_type_modifier.Missing;
 			Cloud_type_encoding encoding = Cloud_type_encoding.JsonValue;
 			Cloud_primitive_type primitive_type = null;
+			Cloud_struct_type struct_type = null;
 			String value = null;
 
 			for (int i = 1; i < element.attributes.length; ++i) {
@@ -148,19 +149,34 @@ public class Cloud_api_loader {
 						modifier = Cloud_type_modifier.Parameters;
 						break;
 					default:
-						Cloud_primitive_type test_primitive_type = Cloud_primitive_type.try_parse(lowercase_name);
-						if (test_primitive_type != null) {
-							if (attribute.value != null) {
-								value = attribute.getString();
-							}
+						Cloud_type_declaration test_struct_type_declaration = struct_types.get("#" + attribute.name);
+						if (test_struct_type_declaration != null) {
+							Cloud_struct_type test_struct_type = test_struct_type_declaration.struct_type();
 							if (primitive_type != null) {
-								throw new Declaration_error(element, "Primitive type " + primitive_type.name + " redeclared to " + test_primitive_type.name, null);
+								throw new Declaration_error(element, "Type " + primitive_type.name + " redeclared to " + test_struct_type.interface_name, null);
 							}
-							primitive_type = test_primitive_type;
+							if (struct_type != null) {
+								throw new Declaration_error(element, "Type " + struct_type.interface_name + " redeclared to " + test_struct_type.interface_name, null);
+							}
+							struct_type = test_struct_type;
+						} else {
+							Cloud_primitive_type test_primitive_type = Cloud_primitive_type.try_parse(lowercase_name);
+							if (test_primitive_type != null) {
+								if (primitive_type != null) {
+									throw new Declaration_error(element, "Type " + primitive_type.name + " redeclared to " + test_primitive_type.name, null);
+								}
+								if (struct_type != null) {
+									throw new Declaration_error(element, "Type " + struct_type.interface_name + " redeclared " + test_primitive_type.name, null);
+								}
+								if (attribute.value != null) {
+									value = attribute.getString();
+								}
+								primitive_type = test_primitive_type;
+							}
 						}
 				}
 			}
-			return new Declaration_summary(modifier, encoding, primitive_type, value);
+			return new Declaration_summary(modifier, encoding, primitive_type, struct_type, value);
 		}
 
 	}
