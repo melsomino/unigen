@@ -8,7 +8,8 @@ public enum Cloud_type_modifier {
 	Object,
 	Record,
 	Recordset,
-	Parameters;
+	Parameters,
+	Union;
 
 	public static Cloud_type_modifier parse(String string) throws Unified_error {
 		if (string == null || string.isEmpty()) {
@@ -28,6 +29,9 @@ public enum Cloud_type_modifier {
 			return Recordset;
 		}
 		if (lowered.equals("parameters") || lowered.equals(":")) {
+			return Parameters;
+		}
+		if (lowered.equals("union") || lowered.equals(":")) {
 			return Parameters;
 		}
 		throw new Unified_error("Invalid modifier: " + string);

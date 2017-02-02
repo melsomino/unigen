@@ -148,6 +148,9 @@ public class Cloud_api_loader {
 					case "parameters":
 						modifier = Cloud_type_modifier.Parameters;
 						break;
+					case "union":
+						modifier = Cloud_type_modifier.Union;
+						break;
 					default:
 						Cloud_type_declaration test_struct_type_declaration = struct_types.get("#" + attribute.name);
 						if (test_struct_type_declaration != null) {

@@ -365,6 +365,9 @@ public class Ios_cloud_types {
 			case Recordset:
 				code.append("sbisRecordset");
 				break;
+			case Union:
+				code.append("sbisUnion");
+				break;
 			default:
 				code.append(declaration.modifier);
 				break;
