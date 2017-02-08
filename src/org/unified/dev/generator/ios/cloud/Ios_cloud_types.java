@@ -251,7 +251,11 @@ public class Ios_cloud_types {
 		code.line("\"s\": [");
 		code.indent();
 		for (Cloud_struct_field field : declaration.struct_type().fields) {
-			code.line("[\"n\": \"", field.name, "\", \"t\": \"", field.declaration.record_schema_name(), "\"],");
+			String type = "\"" + field.declaration.record_schema_name() + "\"";
+			if (field.declaration.modifier == Cloud_type_modifier.Array) {
+				type = "[\"n\": \"Массив\", \"t\": " + type + "]";
+			}
+			code.line("[\"n\": \"", field.name, "\", \"t\": ", type, "],");
 		}
 		code.unindent();
 		code.line("],");
@@ -305,7 +309,7 @@ public class Ios_cloud_types {
 
 	public String method_params_assignment(Cloud_method method) throws Unified_error {
 		if (method.params == null) {
-			return "\t\tlet params = [:]";
+			return "\t\tlet params = [String: Any]()";
 		}
 		if (!method.params.is_struct_type()) {
 			return "\t\tlet params = " + method.params.get_to_json_conversion_method_name() + "params)\n";
