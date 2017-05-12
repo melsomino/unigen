@@ -55,6 +55,21 @@ function reflect_server_state() {
 		}).join('')
 }
 
+var messageCommand, messageArg
+
+function onSendDevMessage(command) {
+	socket.send(command + '`' + messageArg.value)
+	localStorage["messageCommand"] = messageCommand.value
+	localStorage["messageArg"] = messageArg.value
+}
+
+window.onload = function() {
+	messageCommand = document.getElementById('messageCommand')
+	messageArg = document.getElementById('messageArg')
+	messageCommand.value = localStorage["messageCommand"] || ""
+	messageArg.value = localStorage["messageArg"] || ""
+}
+
 navigator.sayswho= (function(){
     var ua= navigator.userAgent, tem,
     M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
@@ -70,3 +85,4 @@ navigator.sayswho= (function(){
     if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
     return M.join(' ');
 })();
+

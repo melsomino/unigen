@@ -52,6 +52,7 @@ public class Cloud_primitive_type implements Cloud_type {
 
 	public final static Cloud_primitive_type integer_type = new Cloud_primitive_type("integer", "Число целое", "integer");
 	public final static Cloud_primitive_type int64_type = new Cloud_primitive_type("int64", "Число целое", "int64");
+	public final static Cloud_primitive_type double_type = new Cloud_primitive_type("double", "Число", "double");
 	public final static Cloud_primitive_type boolean_type = new Cloud_primitive_type("boolean", "Логическое", "boolean");
 	public final static Cloud_primitive_type text_type = new Cloud_primitive_type("string", "Строка", "string");
 	public final static Cloud_primitive_type date_time_type = new Cloud_primitive_type("date-time", "Дата и время", "dateTime");
@@ -66,6 +67,7 @@ public class Cloud_primitive_type implements Cloud_type {
 			typeByName.put("int", integer_type);
 			typeByName.put("integer", integer_type);
 			typeByName.put("int64", int64_type);
+			typeByName.put("double", double_type);
 			typeByName.put("bool", boolean_type);
 			typeByName.put("boolean", boolean_type);
 			typeByName.put("text", text_type);

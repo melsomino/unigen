@@ -27,6 +27,9 @@ public class Ios_cloud_types {
 		if (type == Cloud_primitive_type.int64_type) {
 			return "Int64";
 		}
+		if (type == Cloud_primitive_type.double_type) {
+			return "Double";
+		}
 		if (type == Cloud_primitive_type.date_time_type) {
 			return "Date";
 		}

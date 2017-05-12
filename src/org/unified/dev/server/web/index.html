@@ -28,6 +28,13 @@
 				<div class=section-title>Connections</div>
 				<div id=connections></div>
 			</td>
+			<td valign=top>
+				<div class=section-title>Message</div>
+				Arg: <textarea id=messageArg style='width: 300pt; height: 200pt'></textarea><br>
+				<button onclick='onSendDevMessage("push")'>push</button>
+				<button onclick='onSendDevMessage("push-user-initiated")'>push-user-initiated</button>
+				<br><br>or <input id=messageCommand type=text><button onclick='onSendDevMessage(messageCommand.value)'>send</button>
+			</td>
 		</tr>
 	</table>
 </div>

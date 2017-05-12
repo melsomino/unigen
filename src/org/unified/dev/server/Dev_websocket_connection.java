@@ -172,6 +172,8 @@ class Dev_websocket_connection extends WebSocketAdapter {
 					client_info = parts[1];
 					server.activity.connection_changed(this);
 					break;
+				default:
+					server.activity.broadcast(message);
 			}
 		} catch (IOException e) {
 			Logger.getRootLogger().trace("Failed to handle dev request: " + message, e);
