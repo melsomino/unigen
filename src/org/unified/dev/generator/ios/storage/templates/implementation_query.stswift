@@ -25,8 +25,7 @@ sql.append("SELECT ");
 ~if (return_field == null) {~
 				record: Default~=return_name~() as ~=return_name~,
 ~} ~
-				setParams: {
-					select in
+				setParams: { ~if(query.params.length > 0){~select~}else{~_~}~ in
 ~
 {
 	int index = 0;
@@ -38,8 +37,7 @@ sql.append("SELECT ");
 } ~
 				},
 ~if (return_field == null) {~
-				readRecord: {
-					reader, record in
+				readRecord: { reader, record in
 ~	
 	int index = 0;
 	for (Table_field field : query.record_type.fields) { ~

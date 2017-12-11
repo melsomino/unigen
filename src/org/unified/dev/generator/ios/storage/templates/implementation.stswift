@@ -30,15 +30,13 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage, Applicat
 	
 ~}~
 	public func readDatabase(read: (~=storage.module~DatabaseReader) throws -> Void) throws {
-		try storage.readDatabase {
-			database in
+		try storage.readDatabase { database in
 			try read(DatabaseReader(database))
 		}
 	}
 
 	public func writeDatabase(write: (~=storage.module~DatabaseWriter) throws -> Void) throws {
-		try storage.writeDatabase {
-			database in
+		try storage.writeDatabase { database in
 			try write(DatabaseWriter(database))
 		}
 	}
@@ -50,7 +48,6 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage, Applicat
 ~ for (Record_type record_type : storage.record_types ) { ~
 ~+implementation_record_type~
 ~ } ~
-
 
 	// MARK: - DatabaseReader
 
@@ -130,10 +127,3 @@ public class Default~=storage.module~Storage: ~=storage.module~Storage, Applicat
 		}
 	}
 }
-
-
-
-
-
-
-

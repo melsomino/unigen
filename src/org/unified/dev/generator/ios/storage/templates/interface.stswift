@@ -22,9 +22,6 @@ public protocol ~=storage.module~Storage: Dependent {
 }
 
 
-
-
-
 public protocol ~=storage.module~DatabaseReader {
 
 ~ for (Storage_query query : storage.queries) { ~
@@ -32,9 +29,6 @@ public protocol ~=storage.module~DatabaseReader {
 ~ } ~
 
 }
-
-
-
 
 
 public protocol ~=storage.module~DatabaseWriter: ~=storage.module~DatabaseReader {
@@ -51,9 +45,9 @@ public protocol ~=storage.module~DatabaseWriter: ~=storage.module~DatabaseReader
 
 
 // MARK: - Record Types
-
-
 ~ for (Record_type record_type : storage.record_types ) { ~
+
+
 public protocol ~=record_type.name~: AnyObject {
 
 ~	for (Table_field field : record_type.fields) { ~
@@ -67,11 +61,4 @@ public protocol ~=record_type.name~: AnyObject {
 
 	var _assignedFields: Int { get }
 }
-
-
-
-
-
 ~ } ~
-
-

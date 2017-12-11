@@ -21,7 +21,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 		return result
 ~	} ~
 ~	else if (method.params != null) { ~
-		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params);
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params)
 ~	} ~
 ~	else if (method.result != null) { ~
 		let resultJson = try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, params)
@@ -29,17 +29,14 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 		return result
 ~	} ~
 ~	else { ~
-		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil);
+		try cloudConnector.invokeService(methodUrl, ~= method.protocol ~, ~= swift.quoted(method.method) ~, nil)
 ~	} ~
 	}
-
-
 
 ~ } ~
 
 
 }
-
 
 // MARK: - Types
 
@@ -48,7 +45,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 
 extension ~=struct_type.interface_name~ {
 	public static let typeConverter = SbisType<~=struct_type.interface_name~> (
-		fields: ~= swift.struct_type_fields(struct_type)~, 
+		fields: ~= swift.struct_type_fields(struct_type).replace(",", ", ")~,
 		decode: { values in
 			let result = ~= struct_type.interface_name ~()
 ~= swift.struct_type_decoder(struct_type)~
@@ -58,5 +55,3 @@ extension ~=struct_type.interface_name~ {
 
 }
 ~ } ~
-
-

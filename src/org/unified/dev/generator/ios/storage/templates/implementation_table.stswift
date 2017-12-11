@@ -3,9 +3,14 @@
 ~
 		private static let ~=name~SqlFactory = DatabaseRecordSqlFactory<~=table.record_type.name~>(
 		"~=table.name~", { record in record._assignedFields }, [
-~	for (Table_field field : table.fields) { ~
-			DatabaseRecordField("~=field.name~", ~=field.included_in_primary_key~, { statement, index, record in statement.~=field.type.param_setter()~(index, record.~=field.name~) }),
-~	} ~
+~
+	int field_count = table.fields.length;
+	int field_index = 0;
+	for (Table_field field : table.fields) { ~
+			DatabaseRecordField("~=field.name~", ~=field.included_in_primary_key~, { statement, index, record in statement.~=field.type.param_setter()~(index, record.~=field.name~) })~if(field_index < field_count - 1) {~,~}~
+
+~		++field_index;
+	} ~
 		])
 
 		private var ~=name~StatementFactory: DatabaseRecordStatementFactory<~=table.record_type.name~>

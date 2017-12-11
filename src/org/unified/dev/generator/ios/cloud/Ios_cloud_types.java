@@ -41,13 +41,9 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String interface_field_type_declaration(Cloud_type_declaration declaration) throws Unified_error {
 		return ": " + interface_declaration(declaration);
 	}
-
-
 
 
 
@@ -58,14 +54,10 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String param_type_declaration(Cloud_type_declaration declaration) throws Unified_error {
 		String declaration_string = interface_declaration(declaration);
 		return ": " + declaration_string;
 	}
-
-
 
 
 
@@ -76,13 +68,9 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String get_interface_type_name(Cloud_type_declaration declaration) throws Unified_error {
 		return declaration.is_struct_type() ? declaration.struct_type().interface_name : get_primitive_type_name(declaration.primitive_type());
 	}
-
-
 
 
 
@@ -92,13 +80,9 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String quoted(String s) {
 		return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "\\t").replace("\n", "\\n").replace("\r", "\\r") + "\"";
 	}
-
-
 
 
 
@@ -109,14 +93,10 @@ public class Ios_cloud_types {
 
 
 
-
-
 		CodeBuilder indent() {
 			line_indent += "\t";
 			return this;
 		}
-
-
 
 
 
@@ -129,14 +109,10 @@ public class Ios_cloud_types {
 
 
 
-
-
 		CodeBuilder start_line(String... strings) {
 			code.append(line_indent);
 			return text(strings);
 		}
-
-
 
 
 
@@ -149,15 +125,11 @@ public class Ios_cloud_types {
 
 
 
-
-
 		CodeBuilder end_line(String... strings) {
 			text(strings);
 			code.append("\n");
 			return this;
 		}
-
-
 
 
 
@@ -170,15 +142,11 @@ public class Ios_cloud_types {
 
 
 
-
-
 		@Override
 		public String toString() {
 			return code.toString();
 		}
 	}
-
-
 
 
 
@@ -203,8 +171,6 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String method_params_declaration(Cloud_method method) throws Unified_error {
 		if (method.params == null) {
 			return "";
@@ -219,8 +185,6 @@ public class Ios_cloud_types {
 
 
 
-
-
 	private String combine(String a, String b) {
 		if (a == null || a.length() == 0) {
 			return b;
@@ -230,21 +194,20 @@ public class Ios_cloud_types {
 
 
 
-
-
 	private void encode_json_object_param_value(String source, Cloud_type_declaration declaration, CodeBuilder code) throws Unified_error {
 		code.end_line("[");
 		code.indent();
+		Cloud_struct_field[] fields = declaration.struct_type().fields;
+		int index = 0;
 		for (Cloud_struct_field field : declaration.struct_type().fields) {
 			code.start_line("\"" + field.name + "\": ");
 			encode_param_value(combine(source, field.identifier), field.declaration, code);
-			code.end_line(",");
+			code.end_line(index < fields.length - 1? "," : "");
+			++index;
 		}
 		code.unindent();
 		code.start_line("]");
 	}
-
-
 
 
 
@@ -253,21 +216,27 @@ public class Ios_cloud_types {
 		code.indent();
 		code.line("\"s\": [");
 		code.indent();
-		for (Cloud_struct_field field : declaration.struct_type().fields) {
+		Cloud_struct_field[] fields = declaration.struct_type().fields;
+		int index = 0;
+		for (Cloud_struct_field field : fields) {
 			String type = "\"" + field.declaration.record_schema_name() + "\"";
 			if (field.declaration.modifier == Cloud_type_modifier.Array) {
 				type = "[\"n\": \"Массив\", \"t\": " + type + "]";
 			}
-			code.line("[\"n\": \"", field.name, "\", \"t\": ", type, "],");
+			String comma = index < fields.length - 1? "," : "";
+			++index;
+			code.line("[\"n\": \"", field.name, "\", \"t\": ", type, "]", comma);
 		}
 		code.unindent();
 		code.line("],");
 		code.line("\"d\": [");
 		code.indent();
-		for (Cloud_struct_field field : declaration.struct_type().fields) {
+		index = 0;
+		for (Cloud_struct_field field : fields) {
 			code.start_line("");
 			encode_param_value(combine(source, field.identifier), field.declaration, code);
-			code.end_line(",");
+			code.end_line(index < fields.length - 1? "," : "");
+			++index;
 		}
 		code.unindent();
 		code.line("]");
@@ -277,17 +246,13 @@ public class Ios_cloud_types {
 
 
 
-
-
 	private void encode_param_value(String source, Cloud_type_declaration declaration, CodeBuilder code) throws Unified_error {
 		if (declaration.value != null) {
 			if (declaration.value.equals("null")) {
 				code.text("NSNull()");
-			}
-			else if (declaration.primitive_type() == Cloud_primitive_type.text_type) {
+			} else if (declaration.primitive_type() == Cloud_primitive_type.text_type) {
 				code.text(quoted(declaration.value));
-			}
-			else {
+			} else {
 				code.text(declaration.value);
 			}
 			return;
@@ -300,13 +265,10 @@ public class Ios_cloud_types {
 
 		if (declaration.modifier == Cloud_type_modifier.Record) {
 			encode_sbis_record_param_value(source, declaration, code);
-		}
-		else {
+		} else {
 			encode_json_object_param_value(source, declaration, code);
 		}
 	}
-
-
 
 
 
@@ -326,13 +288,9 @@ public class Ios_cloud_types {
 
 
 
-
-
 	public String struct_type_fields(Cloud_struct_type struct_type) {
 		return Arrays.stream(struct_type.fields).map(field -> "\"" + field.name + "\"").collect(Collectors.joining(",", "[", "]"));
 	}
-
-
 
 
 
@@ -358,8 +316,7 @@ public class Ios_cloud_types {
 			case Object:
 				if (declaration.encoding == Cloud_type_encoding.JsonString) {
 					code.append("stringWithJsonObject");
-				}
-				else {
+				} else {
 					code.append("jsonObject");
 				}
 				break;
@@ -386,13 +343,9 @@ public class Ios_cloud_types {
 
 
 
-
-
 	private StringBuilder append_declaration_decoder(Cloud_type_declaration declaration, int index, StringBuilder code) {
 		return append_declaration_decoder(declaration, "values", "values", Integer.toString(index), code);
 	}
-
-
 
 
 
@@ -407,8 +360,6 @@ public class Ios_cloud_types {
 		}
 		return code.toString();
 	}
-
-
 
 
 

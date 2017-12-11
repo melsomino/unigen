@@ -37,7 +37,3 @@
 		return Default~=record_type.name~()
 	}
 ~	} ~
-
-
-
-
