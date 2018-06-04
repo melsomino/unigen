@@ -4,27 +4,11 @@ import org.unified.dev.server.Dev_server;
 import org.unified.module.Module;
 import org.unified.module.Module_loader;
 
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
 
 public class Main {
-	private static void add_jre_lib(String name) {
-		try {
-			String jre = System.getProperty("java.home");
-			URL url = new URL(Paths.get("file://" + jre).getParent().toString() + "/lib/" + name);
-			URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-			Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-			method.setAccessible(true);
-			method.invoke(classLoader, url);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
 
 
 	private static Pair<String, String> parse_command_value(String arg) {
@@ -61,13 +45,13 @@ public class Main {
 
 
 	public static void main(String[] args) {
-		add_jre_lib("javafx-mx.jar");
 		try {
 			Dev_server dev_server = new Dev_server();
 			String configuration_file = null;
 			String dev_web_path = null;
 			boolean generate = false;
 			boolean run = false;
+
 
 			for (String source_arg : args) {
 				Pair<String, String> arg = parse_command_value(source_arg);

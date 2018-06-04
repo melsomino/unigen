@@ -5,7 +5,7 @@ public class Default~= module.name ~CloudApi: ~= module.name ~CloudApi, CloudCon
 	// MARK: - Component
 
 
-	public var dependency: DependencyResolver!
+	public var dependency = sharedDependencyResolver
 
 
 	// MARK: - Methods

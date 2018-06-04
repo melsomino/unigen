@@ -20,7 +20,7 @@ class Dev_watcher_legacy {
 	static void watch(Set<Path> folder_paths, Notify notify) throws Exception {
 		//noinspection InfiniteLoopStatement
 		while (true) {
-			WatchService watcher = FileSystems.getDefault().newWatchService();
+			var watcher = FileSystems.getDefault().newWatchService();
 			for (Path folder_path : folder_paths) {
 				folder_path.register(watcher, new WatchEvent.Kind[]{StandardWatchEventKinds.ENTRY_MODIFY}, SensitivityWatchEventModifier.HIGH);
 			}

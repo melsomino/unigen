@@ -1,11 +1,12 @@
 package org.unified.templates;
 
-import net.openhft.compiler.CompilerUtils;
 import org.unified.Parser;
 import org.unified.Unified_error;
 import org.unified.dev.generator.Generator;
+import org.unified.templates.compiler.ClassGenerator;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,16 +23,12 @@ public class Template_engine {
 
 
 
-
-
 	public Template_engine(String host_language, Class source_class, String source_relative_path) {
 		this.host_language = host_language;
 		this.source_class = source_class;
 		this.source_relative_path = source_relative_path;
 		this.generated_class_prefix = source_class.getSimpleName() + "_" + source_relative_path.replace("/", "_").toLowerCase() + "_";
 	}
-
-
 
 
 
@@ -65,11 +62,17 @@ public class Template_engine {
 		code.append("}\n");
 //		System.out.print(code);
 
-		Class generator_class = CompilerUtils.CACHED_COMPILER.loadFromJava(generator_class_name, code.toString());
-		return new Template(generator_class_name, code.toString(), generator_class.newInstance(), arg_types);
+		Class generator_class = create_generator_class(generator_class_name, code.toString());
+		return new Template(generator_class_name, code.toString(), generator_class.getConstructor().newInstance(), arg_types);
 	}
 
 
+
+
+	private Class create_generator_class(String class_name, String code) throws MalformedURLException, ClassNotFoundException {
+		var generator = new ClassGenerator();
+		return generator.generate(class_name, code);
+	}
 
 
 
@@ -101,15 +104,11 @@ public class Template_engine {
 
 
 
-
-
 	private void parse_include(Parser parser, StringBuilder code) throws Exception {
 		String template_name = parser.pass_until("~").trim();
 		parser.pass("~", Parser.Whitespaces.Not_pass);
 		parse_template(template_name, code);
 	}
-
-
 
 
 
@@ -122,8 +121,6 @@ public class Template_engine {
 			gen_text("\t\t", text, code);
 		}
 	}
-
-
 
 
 
@@ -146,8 +143,6 @@ public class Template_engine {
 
 
 
-
-
 	private void parse_expression(Parser parser, StringBuilder code) throws Unified_error {
 		String expression = parser.pass_until("~");
 		if (expression == null) {
@@ -156,8 +151,6 @@ public class Template_engine {
 		parser.pass("~", Parser.Whitespaces.Not_pass);
 		code.append("\t\t").append("_out.print(").append(expression.trim()).append(");\n");
 	}
-
-
 
 
 
@@ -173,13 +166,9 @@ public class Template_engine {
 
 
 
-
-
 	public void gen_text(String indent, String text, StringBuilder code) {
 		code.append(indent).append("_out.print(\"").append(text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "\\t").replace("\n", "\\n").replace("\r", "\\r")).append("\");\n");
 	}
-
-
 
 
 
@@ -190,13 +179,12 @@ public class Template_engine {
 	}
 
 
+
 	public static String read_text_file(Path path) throws IOException {
 		try (InputStream text_stream = Files.newInputStream(path)) {
 			return text_stream != null ? read_all_text(text_stream, 1024) : null;
 		}
 	}
-
-
 
 
 
